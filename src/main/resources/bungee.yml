@@ -1,0 +1,3 @@
+name: ProxySystem
+version: '${project.version}'
+main: me.bunnykick.smc.proxysystem.ProxySystem
