@@ -1,3 +1,7 @@
 name: ProxySystem
 version: '${project.version}'
 main: me.bunnykick.smc.proxysystem.ProxySystem
+
+commands:
+  proxysystem:
+  ban:
