@@ -1,5 +1,6 @@
 package me.bunnykick.smc.proxysystem.utils;
 
+import me.bunnykick.smc.proxysystem.bansystem.utils.BanPlaceholders;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
@@ -47,4 +48,20 @@ public class Methods {
         player.sendMessage(translateChatColors(messageToSend));
     }
 
+    /**
+     * Replaces the Placeholders to their Values
+     * @param placeholder
+     * @param string String to Change
+     * @param value
+     * @return Given String with Value
+     */
+    public static String translatePlaceholder(BanPlaceholders placeholder, String string, String value) {
+        String label = placeholder.label;
+
+        if(string.contains(label)) {
+            string = string.replace(label, value);
+        }
+
+        return string;
+    }
 }

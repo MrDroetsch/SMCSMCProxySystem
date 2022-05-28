@@ -2,6 +2,8 @@ package me.bunnykick.smc.proxysystem.system;
 
 import me.bunnykick.smc.proxysystem.ProxySystem;
 import me.bunnykick.smc.proxysystem.utils.Methods;
+import me.bunnykick.smc.proxysystem.utils.SystemMessages;
+import me.bunnykick.smc.proxysystem.utils.SystemPermissions;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -39,16 +41,10 @@ public class ReloadCommand extends Command {
             ProxiedPlayer player = (ProxiedPlayer) sender;
 
             // Checking Permissions
-            List<String> permissions = plugin.getSystemConfig().getPermissions("ReloadCommand");
-            boolean hasPermission = false;
-            for(String permission : permissions) {
-                if(player.hasPermission(permission)) {
-                    hasPermission = true;
-                    break;
-                }
-            }
-            if(!hasPermission) {
-                player.sendMessage(Methods.translateChatColors(plugin.getSystemConfig().getMessage("NoPerm")));
+            String permission = plugin.getSystemConfig().getPermission(SystemPermissions.RELOAD);
+            String adminPermission = plugin.getSystemConfig().getPermission(SystemPermissions.ADMIN);
+            if(!player.hasPermission(permission) && !player.hasPermission(adminPermission)) {
+                player.sendMessage(Methods.translateChatColors(plugin.getSystemConfig().getMessage(SystemMessages.NOPERM)));
                 return;
             }
 

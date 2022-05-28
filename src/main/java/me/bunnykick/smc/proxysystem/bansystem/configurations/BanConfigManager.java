@@ -1,7 +1,10 @@
 package me.bunnykick.smc.proxysystem.bansystem.configurations;
 
 import me.bunnykick.smc.proxysystem.bansystem.BanSystem;
+import me.bunnykick.smc.proxysystem.bansystem.utils.BanMessages;
+import me.bunnykick.smc.proxysystem.bansystem.utils.BanPlaceholders;
 import me.bunnykick.smc.proxysystem.utils.Methods;
+import me.bunnykick.smc.proxysystem.utils.SystemPermissions;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
@@ -9,7 +12,6 @@ import net.md_5.bungee.config.YamlConfiguration;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class BanConfigManager {
@@ -51,11 +53,23 @@ public class BanConfigManager {
                 config = ConfigurationProvider.getProvider(YamlConfiguration.class).load(file);
 
                 // Defaults
-                config.set("Permissions.BanPlayer", Methods.getList("proxysystem.banplayer", "proxysystem.admin"));
-                config.set("Permissions.TempbanPlayer", Methods.getList("proxysystem.tempbanplayer", "proxysystem.admin"));
-                config.set("Permissions.BanIP", Methods.getList("proxysystem.banip", "proxysystem.admin"));
-                config.set("Permissions.TempbanIP", Methods.getList("proxysystem.tempbanip", "proxysystem.admin"));
-                config.set("Permissions.BanInfo", Methods.getList("proxysystem.baninfo", "proxysystem.admin"));
+
+                // Permissions
+                config.set("Permissions.BanPlayer", "proxysystem.banplayer");
+                config.set("Permissions.TempbanPlayer", "proxysystem.tempbanplayer");
+                config.set("Permissions.BanIP", "proxysystem.banip");
+                config.set("Permissions.TempbanIP", "proxysystem.tempbanip");
+                config.set("Permissions.BanInfo", "proxysystem.baninfo");
+
+                // Messages
+                config.set("Messages.BanPlayer", Methods.getList("&7Du wurdest auf diesem Netzwerk gebannt!",
+                        "&7Von: §c" + BanPlaceholders.ADMIN.label,
+                        "&7Grund: &c" + BanPlaceholders.REASON.label,
+                        "&7Dauer: &c" + BanPlaceholders.DURATION.label));
+                config.set("Messages.BanNotify", Methods.getList("&7Der Spieler &c" + BanPlaceholders.PLAYER.label + "&7 wurde gebannt!",
+                        "&7Von: §c" + BanPlaceholders.ADMIN.label,
+                        "&7Grund: &c" + BanPlaceholders.REASON.label,
+                        "&7Dauer: &c" + BanPlaceholders.DURATION.label));
 
                 save();
             } else {
@@ -79,13 +93,29 @@ public class BanConfigManager {
 
     /**
      * Gets all Permissions defined for the given Command
-     * @param commandString String to identify the Command
+     * @param permissionEnum Enum to identify the Command
      * @return StringList containing all Permissions
      */
-    public List<String> getPermissions(String commandString) {
+    public String getPermission(SystemPermissions permissionEnum) {
+        String permission = null;
+
+        String path = "Permissions." + permissionEnum.label;
+        if(config.contains(path)) {
+            permission = config.getString(path);
+        }
+
+        return permission;
+    }
+
+    /**
+     * Gets the Kick Message for the Player
+     * @param messageEnum Which kind of Kick is it?
+     * @return List of Lines in the Message
+     */
+    public List<String> getMessage(BanMessages messageEnum) {
         List<String> retList = new ArrayList<>();
 
-        String path = "Permissions." + commandString;
+        String path = "Messages." + messageEnum.label;
         if(config.contains(path)) {
             retList = config.getStringList(path);
         }

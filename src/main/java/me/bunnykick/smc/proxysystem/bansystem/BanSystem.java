@@ -3,7 +3,8 @@ package me.bunnykick.smc.proxysystem.bansystem;
 import me.bunnykick.smc.proxysystem.ProxySystem;
 import me.bunnykick.smc.proxysystem.bansystem.commands.BanCommand;
 import me.bunnykick.smc.proxysystem.bansystem.configurations.BanConfigManager;
-import me.bunnykick.smc.proxysystem.bansystem.database.SQLiteBanConnect;
+import me.bunnykick.smc.proxysystem.bansystem.database.MySQLBan;
+import me.bunnykick.smc.proxysystem.system.MySQLConnect;
 
 public class BanSystem {
 
@@ -13,7 +14,12 @@ public class BanSystem {
     /**
      * BanSystem Variables
      */
+
+    // Config
     private BanConfigManager banConfig;
+
+    // Commands
+    private BanCommand banCommand;
 
     /**
      * Constructor
@@ -46,11 +52,10 @@ public class BanSystem {
         banConfig = new BanConfigManager(this);
 
         // load database
-        SQLiteBanConnect.connect();
-        SQLiteBanConnect.createNewTable();
+        MySQLBan.createNewTableIfNotExists();
 
-        // laodCommands
-        getPlugin().getProxy().getPluginManager().registerCommand(getPlugin(), new BanCommand("ban"));
+        // registerCommands
+        registerCommands();
 
     }
 
@@ -59,11 +64,13 @@ public class BanSystem {
      */
     public void disable() {
 
-        // Disconnect SQLite Connection
-        SQLiteBanConnect.disconnect();
+        // reload Config
+        banConfig.load();
 
-        // TODO: Unregister Commands and Listeners
+        // Unregister commands
+        unregisterCommands();
 
+        // TODO: Unregister Listeners
     }
 
     /**
@@ -75,9 +82,26 @@ public class BanSystem {
     }
 
     /**
+     * Un-/Register Commands and Listeners
+     */
+    private void registerCommands() {
+        // Ban-Command
+        banCommand = new BanCommand("ban", this);
+        getPlugin().getProxy().getPluginManager().registerCommand(getPlugin(), banCommand);
+    }
+
+    private void unregisterCommands() {
+        getPlugin().getProxy().getPluginManager().unregisterCommand(banCommand);
+    }
+
+    /**
      * Getter
      */
     public ProxySystem getPlugin() {
         return plugin;
+    }
+
+    public BanConfigManager getBanConfig() {
+        return banConfig;
     }
 }

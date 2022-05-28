@@ -2,6 +2,8 @@ package me.bunnykick.smc.proxysystem.system;
 
 import me.bunnykick.smc.proxysystem.ProxySystem;
 import me.bunnykick.smc.proxysystem.utils.Methods;
+import me.bunnykick.smc.proxysystem.utils.SystemMessages;
+import me.bunnykick.smc.proxysystem.utils.SystemPermissions;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
@@ -53,6 +55,13 @@ public class SystemConfigManager {
                  * Defaults
                  */
 
+                // MySQL Connection
+                config.set("MySQL.Host", "localhost");
+                config.set("MySQL.Port", "3306");
+                config.set("MySQL.Database", "Database");
+                config.set("MySQL.Username", "Username");
+                config.set("MySQL.Password", "Password");
+
                 // Systems Enabled
                 config.set("BanSystem.Enabled", true);
                 config.set("GeneralFunctions.Enabled", true);
@@ -89,6 +98,20 @@ public class SystemConfigManager {
     }
 
     /**
+     * Get the Information of SQL Connection out of SQL String
+     * @param SQLString String to identify which Information is wanted
+     * @return SQL Connection Information as String
+     */
+    public String getMySQL(String SQLString) {
+        String information = null;
+        String path = "MySQL." + SQLString;
+        if(config.contains(path)) {
+            information = config.getString(path);
+        }
+        return information;
+    }
+
+    /**
      * Checks if the Part of the System is Enabled
      * @param systemString String to identify the System
      * @return Boolean if the System is Enabled
@@ -106,29 +129,29 @@ public class SystemConfigManager {
 
     /**
      * Gets the permission for given Permission String
-     * @param permissionString given Permission String
+     * @param permission given Permission Enum
      * @return Permission as String
      */
-    public List<String> getPermissions(String permissionString) {
-        List<String> retList = new ArrayList<>();
+    public String getPermission(SystemPermissions permission) {
+        String retPerm = null;
 
-        String path = "Permissions." + permissionString;
+        String path = "Permissions." + permission.label;
         if(config.contains(path)) {
-            retList = config.getStringList(path);
+            retPerm = config.getString(path);
         }
 
-        return retList;
+        return retPerm;
     }
 
     /**
      * Get a specific Message which is defined
-     * @param messageString String which defines the Message
+     * @param message Enum which defines the Message
      * @return Message as String
      */
-    public String getMessage(String messageString) {
+    public String getMessage(SystemMessages message) {
         String retString = ChatColor.RED + "ERROR!";
 
-        String path = "Messages." + messageString;
+        String path = "Messages." + message.label;
         if(config.contains(path)) {
             retString = config.getString(path);
         }

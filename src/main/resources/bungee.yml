@@ -1,5 +1,6 @@
 name: ProxySystem
 version: '${project.version}'
+author: BunnyKick
 main: me.bunnykick.smc.proxysystem.ProxySystem
 
 commands:
