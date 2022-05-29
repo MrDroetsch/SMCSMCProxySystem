@@ -11,7 +11,7 @@ public enum BanMessages {
 
     public final String label;
 
-    private BanMessages(String label) {
+    BanMessages(String label) {
         this.label = label;
     }
 

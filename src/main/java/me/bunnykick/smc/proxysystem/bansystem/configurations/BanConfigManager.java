@@ -57,8 +57,10 @@ public class BanConfigManager {
                 // Permissions
                 config.set("Permissions.BanPlayer", "proxysystem.banplayer");
                 config.set("Permissions.TempbanPlayer", "proxysystem.tempbanplayer");
+                config.set("Permissions.UnbanPlayer", "proxysystem.unbanplayer");
                 config.set("Permissions.BanIP", "proxysystem.banip");
                 config.set("Permissions.TempbanIP", "proxysystem.tempbanip");
+                config.set("Permissions.UnbanIP", "proxysystem.unbanip");
                 config.set("Permissions.BanInfo", "proxysystem.baninfo");
 
                 // Messages

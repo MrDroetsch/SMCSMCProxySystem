@@ -9,7 +9,7 @@ public enum BanPlaceholders {
 
     public final String label;
 
-    private BanPlaceholders(String label) {
+    BanPlaceholders(String label) {
         this.label = label;
     }
 

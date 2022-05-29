@@ -6,3 +6,8 @@ main: me.bunnykick.smc.proxysystem.ProxySystem
 commands:
   proxysystem:
   ban:
+  tempban:
+  unban:
+  banip:
+  tempbanip:
+  baninfo:

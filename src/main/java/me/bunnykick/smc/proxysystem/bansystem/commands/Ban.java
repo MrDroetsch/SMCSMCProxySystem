@@ -15,7 +15,7 @@ import net.md_5.bungee.api.plugin.Command;
 
 import java.util.List;
 
-public class BanCommand extends Command {
+public class Ban extends Command {
 
     /**
      * Variables
@@ -24,12 +24,13 @@ public class BanCommand extends Command {
 
     /**
      * Command Constructor
-     * @param name Command name
+     * @param commandName Command name
      * @param banSystem BanSystem
      */
-    public BanCommand(String name, BanSystem banSystem) {
-        super(name);
+    public Ban(String commandName, BanSystem banSystem) {
+        super(commandName);
         this.banSystem = banSystem;
+        banSystem.getPlugin().getProxy().getPluginManager().registerCommand(banSystem.getPlugin(), this);
     }
 
     /**

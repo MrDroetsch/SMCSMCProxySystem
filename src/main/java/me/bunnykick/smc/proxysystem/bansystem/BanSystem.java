@@ -1,10 +1,10 @@
 package me.bunnykick.smc.proxysystem.bansystem;
 
 import me.bunnykick.smc.proxysystem.ProxySystem;
-import me.bunnykick.smc.proxysystem.bansystem.commands.BanCommand;
+import me.bunnykick.smc.proxysystem.bansystem.commands.*;
 import me.bunnykick.smc.proxysystem.bansystem.configurations.BanConfigManager;
 import me.bunnykick.smc.proxysystem.bansystem.database.MySQLBan;
-import me.bunnykick.smc.proxysystem.system.MySQLConnect;
+import me.bunnykick.smc.proxysystem.bansystem.listeners.Join;
 
 public class BanSystem {
 
@@ -19,7 +19,15 @@ public class BanSystem {
     private BanConfigManager banConfig;
 
     // Commands
-    private BanCommand banCommand;
+    private Ban banCommand;
+    private Tempban tempbanCommand;
+    private Unban unbanCommand;
+    private BanIP banIPCommand;
+    private TempbanIP tempbanIPCommand;
+    private BanInfo banInfoCommand;
+
+    // Listeners
+    private Join joinListener;
 
     /**
      * Constructor
@@ -54,8 +62,11 @@ public class BanSystem {
         // load database
         MySQLBan.createNewTableIfNotExists();
 
-        // registerCommands
+        // register commands
         registerCommands();
+
+        // register listeners
+        registerListeners();
 
     }
 
@@ -67,10 +78,12 @@ public class BanSystem {
         // reload Config
         banConfig.load();
 
-        // Unregister commands
+        // unregister commands
         unregisterCommands();
 
-        // TODO: Unregister Listeners
+        // unregister listeners
+        unregisterListeners();
+
     }
 
     /**
@@ -85,13 +98,29 @@ public class BanSystem {
      * Un-/Register Commands and Listeners
      */
     private void registerCommands() {
-        // Ban-Command
-        banCommand = new BanCommand("ban", this);
-        getPlugin().getProxy().getPluginManager().registerCommand(getPlugin(), banCommand);
+
+        banCommand = new Ban("ban", this);
+        tempbanCommand = new Tempban("tempban", this);
+        unbanCommand = new Unban("unban", this);
+        banIPCommand = new BanIP("banip", this);
+        tempbanIPCommand = new TempbanIP("tempbanip", this);
+        banInfoCommand = new BanInfo("baninfo", this);
+
     }
 
     private void unregisterCommands() {
+        // Ban-Command
         getPlugin().getProxy().getPluginManager().unregisterCommand(banCommand);
+    }
+
+    private void registerListeners() {
+        // Join Listener
+        joinListener = new Join(this);
+    }
+
+    private void unregisterListeners() {
+        // Join Listener
+        getPlugin().getProxy().getPluginManager().unregisterListener(joinListener);
     }
 
     /**
