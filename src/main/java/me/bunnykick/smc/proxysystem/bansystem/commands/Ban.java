@@ -74,9 +74,7 @@ public class Ban extends Command {
             try {
                 banned = banSystem.getPlugin().getProxy().getPlayer(name);
                 uuid = banned.getUniqueId().toString();
-                ip = banned.getSocketAddress().toString();
-                if(ip.contains(":"))
-                    ip = ip.split(":")[0];
+                ip = Methods.getIP(banned.getSocketAddress());
             } catch(NullPointerException e) {
                 uuid = MySQLUUID.getUUID(name);
                 ip = MySQLUUID.getIP(name);

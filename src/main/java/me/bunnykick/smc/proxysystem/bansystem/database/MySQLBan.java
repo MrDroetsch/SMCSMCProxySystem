@@ -32,7 +32,7 @@ public class MySQLBan {
                 + "Admin VARCHAR(100),"
                 + "Reason VARCHAR(100),"
                 + "Banned TIMESTAMP DEFAULT CURRENT_TIMESTAMP,"
-                + "BannedTo TIMESTAMP,"
+                + "BannedTo TIMESTAMP DEFAULT CURRENT_TIMESTAMP,"
                 + "Permanent BOOLEAN,"
                 + "IPBanned BOOLEAN,"
                 + "Pardon BOOLEAN DEFAULT false"
@@ -42,7 +42,7 @@ public class MySQLBan {
             PreparedStatement ps = MySQLConnect.getConnection().prepareStatement(sql);
             ps.executeUpdate();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.err.println(e.getMessage());
         }
     }
 
@@ -73,7 +73,7 @@ public class MySQLBan {
             ps.executeUpdate();
             return true;
         } catch(SQLException e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
 
         return false;
@@ -136,7 +136,7 @@ public class MySQLBan {
                     retVal[CheckBanIndex.ADMIN.i] = rs.getString("Admin");
                     retVal[CheckBanIndex.REASON.i] = rs.getString("Reason");
                     String duration;
-                    if(rs.getBoolean("Perma")) {
+                    if(rs.getBoolean("Permanent")) {
                         duration = "PERMANENT";
                     } else {
                         Timestamp bannedTo = rs.getTimestamp("BannedTo");
@@ -153,7 +153,7 @@ public class MySQLBan {
                 }
             }
         } catch(SQLException e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
         return null;
     }

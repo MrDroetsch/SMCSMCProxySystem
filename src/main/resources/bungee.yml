@@ -5,9 +5,16 @@ main: me.bunnykick.smc.proxysystem.ProxySystem
 
 commands:
   proxysystem:
+    usage: /proxysystem reload
   ban:
+    usage: /ban <Spieler> <Grund>
   tempban:
+    usage: /ban <Spieler> <Dauer> <Grund>
   unban:
+    usage: /unban <Spieler>
   banip:
+    usage: /banip <Spieler> <Grund>
   tempbanip:
+    usage: /tempbanip <Spieler> <Dauer> <Grund>
   baninfo:
+    usage: /baninfo <Spieler>

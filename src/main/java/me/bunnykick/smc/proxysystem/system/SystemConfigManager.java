@@ -71,7 +71,8 @@ public class SystemConfigManager {
                 config.set("WartungSystem.Enabled", true);
 
                 // Permissions
-                config.set("Permissions.ReloadCommand", Methods.getList("proxysystem.reload", "proxysystem.admin"));
+                config.set("Permissions.AdminPermission", "proxysystem.admin");
+                config.set("Permissions.ReloadCommand", "proxysystem.reload");
 
                 // Messages
                 config.set("Messages.NoPerm", "&4Keine Berechtigung!");

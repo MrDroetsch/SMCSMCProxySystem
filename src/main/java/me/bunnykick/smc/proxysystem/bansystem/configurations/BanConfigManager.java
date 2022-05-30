@@ -65,11 +65,11 @@ public class BanConfigManager {
 
                 // Messages
                 config.set("Messages.BanPlayer", Methods.getList("&7Du wurdest auf diesem Netzwerk gebannt!",
-                        "&7Von: §c" + BanPlaceholders.ADMIN.label,
+                        "&7Von: &c" + BanPlaceholders.ADMIN.label,
                         "&7Grund: &c" + BanPlaceholders.REASON.label,
                         "&7Dauer: &c" + BanPlaceholders.DURATION.label));
                 config.set("Messages.BanNotify", Methods.getList("&7Der Spieler &c" + BanPlaceholders.PLAYER.label + "&7 wurde gebannt!",
-                        "&7Von: §c" + BanPlaceholders.ADMIN.label,
+                        "&7Von: &c" + BanPlaceholders.ADMIN.label,
                         "&7Grund: &c" + BanPlaceholders.REASON.label,
                         "&7Dauer: &c" + BanPlaceholders.DURATION.label));
 

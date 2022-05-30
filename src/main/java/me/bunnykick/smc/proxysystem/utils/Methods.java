@@ -4,13 +4,33 @@ import me.bunnykick.smc.proxysystem.bansystem.utils.BanPlaceholders;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
+import java.net.SocketAddress;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Methods {
 
+    /**
+     * returns a String with the raw IP without / or Port
+     * @param address
+     * @return
+     */
+    public static String getIP(SocketAddress address) {
+        String ip = address.toString();
+        if(ip.contains(":"))
+            ip = ip.split(":")[0];
+        if(ip.startsWith("/"))
+            ip = ip.substring(1);
+        return ip;
+    }
+
+    /**
+     * gets the SDF string out of a timestamp
+     * @param stamp
+     * @return
+     */
     public static String translateTimestampToString(Timestamp stamp) {
         SimpleDateFormat format = new SimpleDateFormat("[dd.MM.yyyy;HH:mm:ss]");
 
@@ -23,7 +43,11 @@ public class Methods {
      * @return StringList containing all given Strings
      */
     public static List<String> getList(String... array) {
-        return Arrays.stream(array).toList();
+        List<String> list = new ArrayList<>();
+        for(String current : array) {
+            list.add(current);
+        }
+        return list;
     }
 
     /**

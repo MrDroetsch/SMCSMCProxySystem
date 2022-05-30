@@ -7,6 +7,7 @@ import me.bunnykick.smc.proxysystem.bansystem.utils.BanPlaceholders;
 import me.bunnykick.smc.proxysystem.bansystem.utils.CheckBanIndex;
 import me.bunnykick.smc.proxysystem.utils.Methods;
 import net.md_5.bungee.api.connection.PendingConnection;
+import net.md_5.bungee.api.event.LoginEvent;
 import net.md_5.bungee.api.event.PreLoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
@@ -34,18 +35,17 @@ public class Join implements Listener {
      * @param event
      */
     @EventHandler
-    public void onPlayerJoin(PreLoginEvent event) {
+    public void onPlayerJoin(LoginEvent event) {
         PendingConnection pc = event.getConnection();
         String uuid = pc.getUniqueId().toString();
         String name = pc.getName();
-        String ip = pc.getSocketAddress().toString();
-        ip = ip.contains(":") ? ip.split(":")[0] : ip;
+        String ip = Methods.getIP(pc.getSocketAddress());
 
         // Check if uuid, name or ip is banned
         String[] banInfo = MySQLBan.checkBanned(uuid, name, ip); // getting information
         if(banInfo != null) { // Checking if banned
             String admin = banInfo[CheckBanIndex.ADMIN.i];
-            String reason = banInfo[CheckBanIndex.ADMIN.i];
+            String reason = banInfo[CheckBanIndex.REASON.i];
             String duration = banInfo[CheckBanIndex.DURATION.i];
 
             // Building KickMessage

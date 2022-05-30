@@ -1,9 +1,9 @@
 package me.bunnykick.smc.proxysystem.bansystem.utils;
 
 public enum CheckBanIndex {
-    ADMIN(1),
-    REASON(2),
-    DURATION(3);
+    ADMIN(0),
+    REASON(1),
+    DURATION(2);
 
     public final int i;
 
