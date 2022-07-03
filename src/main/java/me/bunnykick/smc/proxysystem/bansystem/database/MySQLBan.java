@@ -158,4 +158,32 @@ public class MySQLBan {
         return null;
     }
 
+    /**
+     * Gets all Information out of Database from Username
+     * @param name
+     * @return returning string array with ban information
+     */
+    public String[] getInfo(String name) {
+        String sql = "SELECT * FROM Banned WHERE Name = ?;";
+        try {
+            String retVal = new String[];
+            String lastReason = "";
+            int banCount = 0;
+            PreparedStatement ps = MySQLConnect.getConnection().prepareStatement(sql);
+            ps.setString(1, name.toLowerCase());
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()) {
+                banCount++;
+                if(rs.getBoolean("Pardon")) {
+                    
+                } else {
+
+                }
+            }
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }
