@@ -1,11 +1,8 @@
-package me.bunnykick.smc.proxysystem.system;
-
-import net.md_5.bungee.api.connection.ProxiedPlayer;
+package me.bunnykick.smc.proxysystem.system.database;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Locale;
 
 public class MySQLUUID {
 
@@ -26,7 +23,6 @@ public class MySQLUUID {
 
     /**
      * Register the UUID and the IP of a Player if it isn't already
-     * @param player Player to be regstered
      * @return Boolean if it was updated
      */
     public static boolean registerPlayerIfNotRegistered(String name, String uuid, String ip) {

@@ -1,7 +1,7 @@
 package me.bunnykick.smc.proxysystem.system.listeners;
 
 import me.bunnykick.smc.proxysystem.ProxySystem;
-import me.bunnykick.smc.proxysystem.system.MySQLUUID;
+import me.bunnykick.smc.proxysystem.system.database.MySQLUUID;
 import me.bunnykick.smc.proxysystem.utils.Methods;
 import net.md_5.bungee.api.connection.PendingConnection;
 import net.md_5.bungee.api.event.LoginEvent;

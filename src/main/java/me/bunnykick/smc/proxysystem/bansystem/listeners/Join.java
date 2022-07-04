@@ -47,6 +47,7 @@ public class Join implements Listener {
             String admin = banInfo[CheckBanIndex.ADMIN.i];
             String reason = banInfo[CheckBanIndex.REASON.i];
             String duration = banInfo[CheckBanIndex.DURATION.i];
+            String ipBanned = banInfo[CheckBanIndex.IP_BANNED.i];
 
             // Building KickMessage
             List<String> kickMessageList = banSystem.getBanConfig().getMessage(BanMessages.BAN_PLAYER);
@@ -60,6 +61,7 @@ public class Join implements Listener {
             kickMessage = Methods.translatePlaceholder(BanPlaceholders.ADMIN, kickMessage, admin);
             kickMessage = Methods.translatePlaceholder(BanPlaceholders.DURATION, kickMessage, duration);
             kickMessage = Methods.translatePlaceholder(BanPlaceholders.REASON, kickMessage, reason);
+            kickMessage = Methods.translatePlaceholder(BanPlaceholders.IP_BANNED, kickMessage, ipBanned);
 
             // kick player
             pc.disconnect(Methods.translateChatColors(kickMessage));

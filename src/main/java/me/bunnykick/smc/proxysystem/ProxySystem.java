@@ -1,8 +1,8 @@
 package me.bunnykick.smc.proxysystem;
 
 import me.bunnykick.smc.proxysystem.bansystem.BanSystem;
-import me.bunnykick.smc.proxysystem.system.MySQLConnect;
-import me.bunnykick.smc.proxysystem.system.MySQLUUID;
+import me.bunnykick.smc.proxysystem.system.database.MySQLConnect;
+import me.bunnykick.smc.proxysystem.system.database.MySQLUUID;
 import me.bunnykick.smc.proxysystem.system.ReloadCommand;
 import me.bunnykick.smc.proxysystem.system.SystemConfigManager;
 import me.bunnykick.smc.proxysystem.system.listeners.Join;

@@ -1,4 +1,4 @@
-package me.bunnykick.smc.proxysystem.system;
+package me.bunnykick.smc.proxysystem.system.database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

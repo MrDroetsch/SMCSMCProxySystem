@@ -4,7 +4,7 @@ import me.bunnykick.smc.proxysystem.bansystem.BanSystem;
 import me.bunnykick.smc.proxysystem.bansystem.database.MySQLBan;
 import me.bunnykick.smc.proxysystem.bansystem.utils.BanMessages;
 import me.bunnykick.smc.proxysystem.bansystem.utils.BanPlaceholders;
-import me.bunnykick.smc.proxysystem.system.MySQLUUID;
+import me.bunnykick.smc.proxysystem.system.database.MySQLUUID;
 import me.bunnykick.smc.proxysystem.utils.Methods;
 import me.bunnykick.smc.proxysystem.utils.SystemMessages;
 import me.bunnykick.smc.proxysystem.utils.SystemPermissions;
@@ -106,6 +106,7 @@ public class Ban extends Command {
                 kickMessage = Methods.translatePlaceholder(BanPlaceholders.ADMIN, kickMessage, admin);
                 kickMessage = Methods.translatePlaceholder(BanPlaceholders.DURATION, kickMessage, "PERMANENT");
                 kickMessage = Methods.translatePlaceholder(BanPlaceholders.REASON, kickMessage, reason);
+                kickMessage = Methods.translatePlaceholder(BanPlaceholders.IP_BANNED, kickMessage, "NEIN");
 
                 banned.disconnect(Methods.translateChatColors(kickMessage));
             }
@@ -123,14 +124,24 @@ public class Ban extends Command {
             for(String current : messageSuccessList) {
                 messageSuccess += current + "\n";
             }
-            messageSuccess.substring(0, messageSuccess.length()-1);
+            messageSuccess = messageSuccess.substring(0, messageSuccess.length()-1);
             messageSuccess = Methods.translatePlaceholder(BanPlaceholders.PLAYER, messageSuccess, name);
             messageSuccess = Methods.translatePlaceholder(BanPlaceholders.ADMIN, messageSuccess, admin);
             messageSuccess = Methods.translatePlaceholder(BanPlaceholders.DURATION, messageSuccess, "PERMANENT");
             messageSuccess = Methods.translatePlaceholder(BanPlaceholders.REASON, messageSuccess, reason);
+            messageSuccess = Methods.translatePlaceholder(BanPlaceholders.IP_BANNED, messageSuccess, "NEIN");
 
             // Send Message Success
-            Methods.sendMessage(player, messageSuccess);
+            String permissionNotify = banSystem.getBanConfig().getPermission(SystemPermissions.BAN_NOTIFY);
+            for(ProxiedPlayer onlinePlayers : banSystem.getPlugin().getProxy().getPlayers()) {
+                if(onlinePlayers.hasPermission(permissionNotify)) {
+                    Methods.sendMessage(onlinePlayers, messageSuccess);
+                }
+            }
+
+            if(!player.hasPermission(permissionNotify)) {
+                Methods.sendMessage(player, "§2Der Spieler wurde gebannt.");
+            }
 
         } else {    // Sender = Console
             // TODO: Console Command

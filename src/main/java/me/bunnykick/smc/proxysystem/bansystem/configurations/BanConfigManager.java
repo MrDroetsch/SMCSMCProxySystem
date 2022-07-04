@@ -55,23 +55,38 @@ public class BanConfigManager {
                 // Defaults
 
                 // Permissions
-                config.set("Permissions.BanPlayer", "proxysystem.banplayer");
-                config.set("Permissions.TempbanPlayer", "proxysystem.tempbanplayer");
-                config.set("Permissions.UnbanPlayer", "proxysystem.unbanplayer");
-                config.set("Permissions.BanIP", "proxysystem.banip");
-                config.set("Permissions.TempbanIP", "proxysystem.tempbanip");
-                config.set("Permissions.UnbanIP", "proxysystem.unbanip");
-                config.set("Permissions.BanInfo", "proxysystem.baninfo");
+                config.set("Permissions." + SystemPermissions.BAN.label, "proxysystem.banplayer");
+                config.set("Permissions." + SystemPermissions.TEMP_BAN.label, "proxysystem.tempbanplayer");
+                config.set("Permissions." + SystemPermissions.UNBAN.label, "proxysystem.unban");
+                config.set("Permissions." + SystemPermissions.BAN_IP.label, "proxysystem.banip");
+                config.set("Permissions." + SystemPermissions.TEMP_BAN_IP.label, "proxysystem.tempbanip");
+                config.set("Permissions." + SystemPermissions.BAN_INFO.label, "proxysystem.baninfo");
+                config.set("Permissions." + SystemPermissions.BAN_NOTIFY.label, "proxysystem.bannotify");
 
                 // Messages
-                config.set("Messages.BanPlayer", Methods.getList("&7Du wurdest auf diesem Netzwerk gebannt!",
+                config.set("Messages." + BanMessages.BAN_PLAYER.label, Methods.getList("&7Du wurdest auf diesem Netzwerk gebannt!",
                         "&7Von: &c" + BanPlaceholders.ADMIN.label,
                         "&7Grund: &c" + BanPlaceholders.REASON.label,
-                        "&7Dauer: &c" + BanPlaceholders.DURATION.label));
-                config.set("Messages.BanNotify", Methods.getList("&7Der Spieler &c" + BanPlaceholders.PLAYER.label + "&7 wurde gebannt!",
+                        "&7Bis: &c" + BanPlaceholders.DURATION.label,
+                        "&7IP-Banned: &c" + BanPlaceholders.IP_BANNED.label));
+                config.set("Messages." + BanMessages.BAN_NOTIFY.label, Methods.getList("&7Der Spieler &c" + BanPlaceholders.PLAYER.label + "&7 wurde gebannt!",
                         "&7Von: &c" + BanPlaceholders.ADMIN.label,
                         "&7Grund: &c" + BanPlaceholders.REASON.label,
-                        "&7Dauer: &c" + BanPlaceholders.DURATION.label));
+                        "&7Bis: &c" + BanPlaceholders.DURATION.label,
+                        "&7IP-Banned: &c" + BanPlaceholders.IP_BANNED.label));
+                config.set("Messages." + BanMessages.BAN_INFO.label, Methods.getList("&7Ban-Info von " + BanPlaceholders.PLAYER.label + "&7:",
+                        "&7IP: &c" + BanPlaceholders.IP.label,
+                        "&7Ban-Count: &c" + BanPlaceholders.COUNT.label,
+                        "&7Aktuell gebannt: &c" + BanPlaceholders.STILL_BANNED.label,
+                        "&7IP-Banned: &c" + BanPlaceholders.IP_BANNED.label,
+                        "&7Zuletzt gebannt von: &c" + BanPlaceholders.ADMIN.label,
+                        "&7Grund: &c" + BanPlaceholders.REASON.label,
+                        "&7Bis: &c" + BanPlaceholders.DURATION.label));
+                config.set("Messages." + BanMessages.UNBAN_NOTIFY.label, Methods.getList("&7Der Spieler &c" + BanPlaceholders.PLAYER.label + "&7 wurde entbannt!",
+                        "&7IP-Banned: &c" + BanPlaceholders.IP_BANNED.label,
+                        "&7Gebannt von: &c" + BanPlaceholders.ADMIN.label,
+                        "&7Grund: &c" + BanPlaceholders.REASON.label,
+                        "&7Bis: &c" + BanPlaceholders.DURATION.label));
 
                 save();
             } else {
