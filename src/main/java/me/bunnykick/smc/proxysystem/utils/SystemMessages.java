@@ -5,7 +5,7 @@ public enum SystemMessages {
 
     public final String label;
 
-    private SystemMessages(String label) {
+    SystemMessages(String label) {
         this.label = label;
     }
 }
