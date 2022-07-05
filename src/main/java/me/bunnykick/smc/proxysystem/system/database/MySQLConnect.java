@@ -22,12 +22,14 @@ public class MySQLConnect {
         }
     }
 
-    public static void connect() {
+    public static boolean connect() {
         try {
             con = DriverManager.getConnection(url);
+            return true;
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.err.println(e.getMessage());
         }
+        return false;
     }
 
     public static void disconnect() {
@@ -35,7 +37,7 @@ public class MySQLConnect {
             try {
                 con.close();
             } catch (SQLException e) {
-                e.printStackTrace();
+                System.err.println(e.getMessage());
             }
         }
     }

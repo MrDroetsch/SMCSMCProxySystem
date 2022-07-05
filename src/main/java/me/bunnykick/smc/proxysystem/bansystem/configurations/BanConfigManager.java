@@ -78,13 +78,13 @@ public class BanConfigManager {
                         "&7IP: &c" + BanPlaceholders.IP.label,
                         "&7Ban-Count: &c" + BanPlaceholders.COUNT.label,
                         "&7Aktuell gebannt: &c" + BanPlaceholders.STILL_BANNED.label,
-                        "&7IP-Banned: &c" + BanPlaceholders.IP_BANNED.label,
                         "&7Zuletzt gebannt von: &c" + BanPlaceholders.ADMIN.label,
+                        "&7IP-Banned: &c" + BanPlaceholders.IP_BANNED.label,
                         "&7Grund: &c" + BanPlaceholders.REASON.label,
                         "&7Bis: &c" + BanPlaceholders.DURATION.label));
                 config.set("Messages." + BanMessages.UNBAN_NOTIFY.label, Methods.getList("&7Der Spieler &c" + BanPlaceholders.PLAYER.label + "&7 wurde entbannt!",
-                        "&7IP-Banned: &c" + BanPlaceholders.IP_BANNED.label,
                         "&7Gebannt von: &c" + BanPlaceholders.ADMIN.label,
+                        "&7IP-Banned: &c" + BanPlaceholders.IP_BANNED.label,
                         "&7Grund: &c" + BanPlaceholders.REASON.label,
                         "&7Bis: &c" + BanPlaceholders.DURATION.label));
 

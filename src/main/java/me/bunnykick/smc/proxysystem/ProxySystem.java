@@ -14,6 +14,8 @@ public final class ProxySystem extends Plugin {
      * Variables
      */
 
+    private boolean disabled = false;
+
     // Instance
     private static ProxySystem instance;
 
@@ -43,7 +45,11 @@ public final class ProxySystem extends Plugin {
         systemConfig = new SystemConfigManager(this);
 
         // MySQL Connection
-        setupMySQLConnection();
+        if(!setupMySQLConnection()) {
+            System.err.println("Das ProxySystem kann nicht geladen werden, da keine Connection zum MySQL-Server aufgebaut werden konnte.");
+            disabled = true;
+            return;
+        }
 
         // create MySQLUUID Table
         MySQLUUID.createTableIFNotExists();
@@ -64,6 +70,8 @@ public final class ProxySystem extends Plugin {
 
     @Override
     public void onDisable() {
+        if(disabled)
+            return;
         // Plugin shutdown logic
         MySQLConnect.disconnect();
         // TODO: shutdown systems
@@ -74,7 +82,7 @@ public final class ProxySystem extends Plugin {
     /**
      * Connect to MySQL
      */
-    private void setupMySQLConnection() {
+    private boolean setupMySQLConnection() {
 
         // Getting Information out of SystemConfig
         String host = systemConfig.getMySQL("Host");
@@ -85,7 +93,8 @@ public final class ProxySystem extends Plugin {
 
         // Connect to MySQL
         MySQLConnect.setVariables(database, username, password, host, port);
-        MySQLConnect.connect();
+
+        return MySQLConnect.connect();
 
     }
 

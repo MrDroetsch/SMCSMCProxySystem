@@ -1,8 +1,7 @@
 package me.bunnykick.smc.proxysystem.utils;
 
 public enum SystemMessages {
-    NOPERM("NoPerm"),
-    ERROR("ERROR");
+    NOPERM("NoPerm");
 
     public final String label;
 

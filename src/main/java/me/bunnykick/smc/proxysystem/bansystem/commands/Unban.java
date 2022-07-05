@@ -43,6 +43,14 @@ public class Unban extends Command {
             // initializing Player
             ProxiedPlayer player = (ProxiedPlayer) sender;
 
+            // Checking Permission
+            String permission = banSystem.getBanConfig().getPermission(SystemPermissions.UNBAN);
+            String adminPermission = banSystem.getPlugin().getSystemConfig().getPermission(SystemPermissions.ADMIN);
+            if(!(player.hasPermission(permission) || player.hasPermission(adminPermission))) {
+                Methods.sendMessage(player, "&4Keine Berechtigung");
+                return;
+            }
+
             // Checking Arguments
             if(args.length == 0) {
                 player.sendMessage(Methods.translateChatColors(ChatColor.DARK_RED + "/unban <Spieler>"));
@@ -82,14 +90,14 @@ public class Unban extends Command {
                 unbanMessage = Methods.translatePlaceholder(BanPlaceholders.DURATION, unbanMessage, checkBanned[CheckBanIndex.DURATION.i]);
 
                 // Send UnbanMessage
-                String permission = banSystem.getBanConfig().getPermission(SystemPermissions.BAN_NOTIFY);
+                String perm = banSystem.getBanConfig().getPermission(SystemPermissions.BAN_NOTIFY);
                 for(ProxiedPlayer onlinePlayers : banSystem.getPlugin().getProxy().getPlayers()) {
-                    if(onlinePlayers.hasPermission(permission))
+                    if(onlinePlayers.hasPermission(perm) || onlinePlayers.hasPermission(adminPermission))
                         Methods.sendMessage(onlinePlayers, unbanMessage);
                 }
 
                 // Send alternative Message
-                if(!player.hasPermission(permission)) {
+                if(!(player.hasPermission(perm) || player.hasPermission(adminPermission))) {
                     Methods.sendMessage(player, "&c" + banned + " &2wurde entbannt.");
                 }
             }

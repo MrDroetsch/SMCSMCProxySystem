@@ -40,6 +40,7 @@ public class MySQLUUID {
                 ps.setString(2, ip);
                 ps.setString(3, name);
                 ps.executeUpdate();
+                return true;
             } else { // Update if IP/Name changed
                 if(!rs.getString("Name").equals(name) || !rs.getString("IP").equals(ip)) {
                     sql = "UPDATE PlayerLog SET Name=?,IP=?;";

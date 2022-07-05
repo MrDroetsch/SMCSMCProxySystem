@@ -67,8 +67,6 @@ public class SystemConfigManager {
                 config.set("GeneralFunctions.Enabled", true);
                 config.set("MuteSystem.Enabled", true);
                 config.set("ReportSystem.Enabled", true);
-                config.set("ServerAPI.Enabled", true);
-                config.set("WartungSystem.Enabled", true);
 
                 // Permissions
                 config.set("Permissions.AdminPermission", "proxysystem.admin");
@@ -76,7 +74,6 @@ public class SystemConfigManager {
 
                 // Messages
                 config.set("Messages.NoPerm", "&4Keine Berechtigung!");
-                config.set("Messages.ERROR", "&cERROR!");
 
                 save();
             } else {

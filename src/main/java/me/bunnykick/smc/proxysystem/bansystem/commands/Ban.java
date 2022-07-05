@@ -65,7 +65,7 @@ public class Ban extends Command {
                     return;
             }
 
-            // Getting Informations
+            // Getting Information
             String name = args[0];
 
             // Try getting UUID and IP
@@ -112,9 +112,14 @@ public class Ban extends Command {
             }
 
             // Register Ban in MySQL
-            if(!MySQLBan.banPlayer(name, uuid, ip, admin, reason, perma, banIP)) {
-                // Send Message ERROR
-                Methods.sendMessage(player, ChatColor.RED + "ERROR: Fehler bei Verbindung mit MySQL!");
+            if(MySQLBan.checkBanned(name) == null) {
+                if(!MySQLBan.banPlayer(name, uuid, ip, admin, reason, perma, banIP)) {
+                    // Send Message ERROR
+                    Methods.sendMessage(player, ChatColor.RED + "ERROR: Fehler bei Verbindung mit MySQL!");
+                    return;
+                }
+            } else {
+                Methods.sendMessage(player, ChatColor.RED + "ERROR: Dieser Spieler ist bereits gebannt!");
                 return;
             }
 
@@ -134,12 +139,12 @@ public class Ban extends Command {
             // Send Message Success
             String permissionNotify = banSystem.getBanConfig().getPermission(SystemPermissions.BAN_NOTIFY);
             for(ProxiedPlayer onlinePlayers : banSystem.getPlugin().getProxy().getPlayers()) {
-                if(onlinePlayers.hasPermission(permissionNotify)) {
+                if(onlinePlayers.hasPermission(permissionNotify) || player.hasPermission(adminPermission)) {
                     Methods.sendMessage(onlinePlayers, messageSuccess);
                 }
             }
 
-            if(!player.hasPermission(permissionNotify)) {
+            if(!(player.hasPermission(permissionNotify) || player.hasPermission(adminPermission))) {
                 Methods.sendMessage(player, "§2Der Spieler wurde gebannt.");
             }
 

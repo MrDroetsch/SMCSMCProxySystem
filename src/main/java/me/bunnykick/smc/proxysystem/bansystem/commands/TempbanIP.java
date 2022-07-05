@@ -1,10 +1,24 @@
 package me.bunnykick.smc.proxysystem.bansystem.commands;
 
 import me.bunnykick.smc.proxysystem.bansystem.BanSystem;
+import me.bunnykick.smc.proxysystem.bansystem.database.MySQLBan;
+import me.bunnykick.smc.proxysystem.bansystem.utils.BanMessages;
+import me.bunnykick.smc.proxysystem.bansystem.utils.BanPlaceholders;
+import me.bunnykick.smc.proxysystem.system.database.MySQLUUID;
+import me.bunnykick.smc.proxysystem.utils.Methods;
+import me.bunnykick.smc.proxysystem.utils.SystemMessages;
+import me.bunnykick.smc.proxysystem.utils.SystemPermissions;
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 
+import java.sql.Timestamp;
+import java.util.List;
+
 public class TempbanIP extends Command {
+
+    private final BanSystem banSystem;
 
     /**
      * constructor of ip tempban command
@@ -13,6 +27,7 @@ public class TempbanIP extends Command {
      */
     public TempbanIP(String commandName, BanSystem banSystem) {
         super(commandName);
+        this.banSystem = banSystem;
         banSystem.getPlugin().getProxy().getPluginManager().registerCommand(banSystem.getPlugin(), this);
     }
 
@@ -23,6 +38,146 @@ public class TempbanIP extends Command {
      */
     @Override
     public void execute(CommandSender sender, String[] args) {
+
+        if(sender instanceof ProxiedPlayer) {       // Sender = Player
+
+            // Initialize Player
+            ProxiedPlayer player = (ProxiedPlayer) sender;
+            ProxiedPlayer banned = null;
+
+            // Check Permissions
+            String permission = banSystem.getBanConfig().getPermission(SystemPermissions.TEMP_BAN_IP);
+            String adminPermission = banSystem.getPlugin().getSystemConfig().getPermission(SystemPermissions.ADMIN);
+            if(!player.hasPermission(permission) && !player.hasPermission(adminPermission)) {
+                banSystem.getPlugin().getSystemConfig().getMessage(SystemMessages.NOPERM);
+                return;
+            }
+
+            // Check arguments      /ban <Player> <Zeit> <Grund>
+            switch(args.length) {
+                case 0:
+                    Methods.sendMessage(player, ChatColor.DARK_RED + "/tempbanip <Spieler> <Zeit> Grund");
+                    return;
+                case 1:
+                    Methods.sendMessage(player, ChatColor.DARK_RED + "/tempbanip " + args[0] + " <Zeit> Grund");
+                    return;
+                case 2:
+                    Methods.sendMessage(player, ChatColor.DARK_RED + "/tempbanip " + args[0] + " " + args[1] + " Grund");
+                    return;
+            }
+
+            // Getting Information
+            String name = args[0];
+
+            // Try getting UUID and IP
+            String uuid = null;
+            String ip = null;
+            try {
+                banned = banSystem.getPlugin().getProxy().getPlayer(name);
+                uuid = banned.getUniqueId().toString();
+                ip = Methods.getIP(banned.getSocketAddress());
+            } catch(NullPointerException e) {
+                uuid = MySQLUUID.getUUID(name);
+                ip = MySQLUUID.getIP(name);
+            }
+            if(uuid == null) { // Message to Player that UUID is not registered yet
+                if(!name.contains(".")) {
+                    Methods.sendMessage(player, ChatColor.RED + "IP konnte nicht ermittelt werden. " + name + " wird NICHT gebannt!");
+                    return;
+                } else {
+                    ip = name;
+                    name = "NULL";
+                    uuid = "NULL";
+                    if(ip.contains(":")) {
+                        ip = ip.split(":")[0];
+                    }
+                    Methods.sendMessage(player, "§cNur die IP (" + ip + ") wird gebannt. Sicherer ist: /banip <SpielerName>");
+                }
+            }
+
+            String admin = player.getName();
+
+            // Build reason String
+            String reason = "";
+            for(int i = 2; i < args.length; i++) {
+                reason += args[i] + " ";
+            }
+
+            // Get BannedTo Timestamp
+            long addedMillis = Methods.getAddedMillis(args[1]);
+            if(addedMillis == 0) {
+                Methods.sendMessage(player, "§cUngültige Zeitangabe! Beispiel: 5m (5 Minuten) Einheiten: (s,m,h,d,w,y)");
+                return;
+            }
+            Timestamp bannedTo = new Timestamp((System.currentTimeMillis() + addedMillis));
+
+            boolean perma = false;
+            boolean banIP = true;
+
+            // Create Kick Message
+            List<String> kickMessageList = banSystem.getBanConfig().getMessage(BanMessages.BAN_PLAYER);
+            String kickMessage = "";
+            for(String current : kickMessageList) {
+                kickMessage += current + "\n";
+            }
+            kickMessage = Methods.translatePlaceholder(BanPlaceholders.PLAYER, kickMessage, name);
+            kickMessage = Methods.translatePlaceholder(BanPlaceholders.ADMIN, kickMessage, admin);
+            kickMessage = Methods.translatePlaceholder(BanPlaceholders.DURATION, kickMessage, Methods.translateTimestampToString(bannedTo));
+            kickMessage = Methods.translatePlaceholder(BanPlaceholders.REASON, kickMessage, reason);
+            kickMessage = Methods.translatePlaceholder(BanPlaceholders.IP_BANNED, kickMessage, "JA");
+
+            // banned Player is Online and gets Kicked
+            if(banned != null) {
+                banned.disconnect(Methods.translateChatColors(kickMessage));
+            }
+
+            // Kick Players with same IP
+            for(ProxiedPlayer onlinePlayers : banSystem.getPlugin().getProxy().getPlayers()) {
+                if(Methods.getIP(onlinePlayers.getSocketAddress()).equals(ip)) {
+                    onlinePlayers.disconnect(Methods.translateChatColors(kickMessage));
+                }
+            }
+
+            // Register Ban in MySQL
+            if(MySQLBan.checkBanned(name) == null || name.equals("NULL")) {
+                if(!MySQLBan.banPlayer(name, uuid, ip, admin, reason, bannedTo, perma, banIP)) {
+                    // Send Message ERROR
+                    Methods.sendMessage(player, ChatColor.RED + "ERROR: Fehler bei Verbindung mit MySQL!");
+                    return;
+                }
+            } else {
+                Methods.sendMessage(player, ChatColor.RED + "ERROR: Dieser Spieler ist bereits gebannt!");
+                return;
+            }
+
+            // Build Message Success
+            List<String> messageSuccessList = banSystem.getBanConfig().getMessage(BanMessages.BAN_NOTIFY);
+            String messageSuccess = "";
+            for(String current : messageSuccessList) {
+                messageSuccess += current + "\n";
+            }
+            messageSuccess = messageSuccess.substring(0, messageSuccess.length()-1);
+            messageSuccess = Methods.translatePlaceholder(BanPlaceholders.PLAYER, messageSuccess, name);
+            messageSuccess = Methods.translatePlaceholder(BanPlaceholders.ADMIN, messageSuccess, admin);
+            messageSuccess = Methods.translatePlaceholder(BanPlaceholders.DURATION, messageSuccess, Methods.translateTimestampToString(bannedTo));
+            messageSuccess = Methods.translatePlaceholder(BanPlaceholders.REASON, messageSuccess, reason);
+            messageSuccess = Methods.translatePlaceholder(BanPlaceholders.IP_BANNED, messageSuccess, "JA");
+
+            // Send Message Success
+            String permissionNotify = banSystem.getBanConfig().getPermission(SystemPermissions.BAN_NOTIFY);
+            for(ProxiedPlayer onlinePlayers : banSystem.getPlugin().getProxy().getPlayers()) {
+                if(onlinePlayers.hasPermission(permissionNotify) || player.hasPermission(adminPermission)) {
+                    Methods.sendMessage(onlinePlayers, messageSuccess);
+                }
+            }
+
+            if(!(player.hasPermission(permissionNotify) || player.hasPermission(adminPermission))) {
+                Methods.sendMessage(player, "§2Der Spieler wurde gebannt.");
+            }
+
+        } else {    // Sender = Console
+            // TODO: Console Command
+        }
 
     }
 

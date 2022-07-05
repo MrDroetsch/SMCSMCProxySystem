@@ -62,7 +62,7 @@ public class MySQLBan {
 
         try {
             PreparedStatement ps = MySQLConnect.getConnection().prepareStatement(sql);
-            ps.setString(1, name);
+            ps.setString(1, name.toLowerCase());
             ps.setString(2, UUID);
             ps.setString(3, IP);
             ps.setString(4, admin);
@@ -91,12 +91,30 @@ public class MySQLBan {
      * @return
      */
     public static boolean banPlayer(String name, String UUID, String IP, String admin, String reason, Timestamp bannedTo, boolean perma, boolean banIP) {
-        // TODO: TempBan / TempBanIP
+
+        String sql = "INSERT INTO Banned (Name, UUID, IP, Admin, Reason, BannedTo, Permanent, IPBanned) VALUES (?,?,?,?,?,?,?,?);";
+
+        try {
+            PreparedStatement ps = MySQLConnect.getConnection().prepareStatement(sql);
+            ps.setString(1, name.toLowerCase());
+            ps.setString(2, UUID);
+            ps.setString(3, IP);
+            ps.setString(4, admin);
+            ps.setString(5, reason);
+            ps.setTimestamp(6, bannedTo);
+            ps.setBoolean(7, perma);
+            ps.setBoolean(8, banIP);
+            ps.executeUpdate();
+            return true;
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
+
         return false;
     }
 
     /**
-     * Archives the not longer handling Tempban
+     * Archives the not longer handling Ban
      * @param uuid
      * @param name
      * @param ip
@@ -146,6 +164,9 @@ public class MySQLBan {
             ResultSet rs = ps.executeQuery();
             while(rs.next()) {
                 if(!rs.getBoolean("Pardon")) {
+                    if(!rs.getBoolean("IPBanned") && !rs.getString("Name").equalsIgnoreCase(name)) {
+                        return null;
+                    }
                     String[] retVal = new String[CheckBanIndex.values().length];
                     retVal[CheckBanIndex.ADMIN.i] = rs.getString("Admin");
                     retVal[CheckBanIndex.REASON.i] = rs.getString("Reason");
@@ -186,7 +207,7 @@ public class MySQLBan {
             ResultSet rs = ps.executeQuery();
             while(rs.next()) {
                 if(!rs.getBoolean("Pardon")) {
-                    String[] retVal = new String[3];
+                    String[] retVal = new String[CheckBanIndex.values().length];
                     retVal[CheckBanIndex.ADMIN.i] = rs.getString("Admin");
                     retVal[CheckBanIndex.REASON.i] = rs.getString("Reason");
                     String duration;
@@ -203,6 +224,7 @@ public class MySQLBan {
                         duration = Methods.translateTimestampToString(bannedTo);
                     }
                     retVal[CheckBanIndex.DURATION.i] = duration;
+                    retVal[CheckBanIndex.IP_BANNED.i] = rs.getBoolean("IPBanned") ? "JA" : "NEIN";
                     return retVal;
                 }
             }
@@ -217,7 +239,7 @@ public class MySQLBan {
      * @param name
      * @return returning string array with ban information
      */
-    public String[] getInfo(String name) {
+    public static String[] getInfo(String name) {
         String sql = "SELECT * FROM Banned WHERE Name = ?;";
         try {
             String[] retVal = new String[BanInfoIndex.values().length];
@@ -240,7 +262,7 @@ public class MySQLBan {
                 banCount++;
 
                 // StillBanned?
-                stillBanned = rs.getBoolean("Pardon");
+                stillBanned = !rs.getBoolean("Pardon");
 
                 // IPBanned?
                 ipBanned = rs.getBoolean("IPBanned");
@@ -252,7 +274,7 @@ public class MySQLBan {
                 lastAdmin = rs.getString("Admin");
 
                 // ip
-                ip = rs.getString("IP");
+                ip = rs.getString("IP") == null ? "Nicht gefunden" : rs.getString("IP");
 
                 // duration
                 if(rs.getBoolean("Permanent")) {
@@ -269,9 +291,12 @@ public class MySQLBan {
             retVal[BanInfoIndex.ADMIN.index] = lastAdmin;
             retVal[BanInfoIndex.LAST_REASON.index] = lastReason;
             retVal[BanInfoIndex.DURATION.index] = duration;
-            retVal[BanInfoIndex.BANNED.index] = Boolean.toString(stillBanned);
-            retVal[BanInfoIndex.IP_BANNED.index] = Boolean.toString(ipBanned);
+            retVal[BanInfoIndex.BANNED.index] = stillBanned ? "JA" : "NEIN";
+            retVal[BanInfoIndex.IP_BANNED.index] = ipBanned ? "JA" : "NEIN";
             retVal[BanInfoIndex.BAN_COUNT.index] = Integer.toString(banCount);
+
+            if(banCount == 0)
+                return null;
 
             return retVal;
 
