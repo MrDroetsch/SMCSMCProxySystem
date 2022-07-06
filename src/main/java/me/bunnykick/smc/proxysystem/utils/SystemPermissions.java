@@ -10,7 +10,8 @@ public enum SystemPermissions {
     UNBAN("UnbanPlayer"),
     BAN_IP("BanIP"),
     TEMP_BAN_IP("TempbanIP"),
-    BAN_INFO("BanInfo");
+    BAN_INFO("BanInfo"),
+    BAN_STAT("BanStatistic");
 
     public final String label;
 

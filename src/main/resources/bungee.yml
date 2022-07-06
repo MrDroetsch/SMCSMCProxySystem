@@ -18,3 +18,5 @@ commands:
     usage: /tempbanip <Spieler> <Dauer> <Grund>
   baninfo:
     usage: /baninfo <Spieler>
+  banstat:
+    usage: /banstat <Spieler> [BanID]

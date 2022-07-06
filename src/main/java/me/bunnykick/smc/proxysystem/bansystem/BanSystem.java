@@ -25,6 +25,7 @@ public class BanSystem {
     private BanIP banIPCommand;
     private TempbanIP tempbanIPCommand;
     private BanInfo banInfoCommand;
+    private BanStat banStatCommand;
 
     // Listeners
     private Join joinListener;
@@ -105,6 +106,7 @@ public class BanSystem {
         banIPCommand = new BanIP("banip", this);
         tempbanIPCommand = new TempbanIP("tempbanip", this);
         banInfoCommand = new BanInfo("baninfo", this);
+        banStatCommand = new BanStat("banstat", this);
 
     }
 

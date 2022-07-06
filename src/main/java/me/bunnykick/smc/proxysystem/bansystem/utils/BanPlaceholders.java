@@ -9,7 +9,11 @@ public enum BanPlaceholders {
     ADMIN("{ADMIN}"),
     COUNT("{COUNT}"),
     STILL_BANNED("{STILL_BANNED}"),
-    IP_BANNED("{IP_BANNED}");
+    IP_BANNED("{IP_BANNED}"),
+    UUID("{UUID}"),
+    BANNED_FROM("{BANNED_FROM}"),
+    BANNED_TO("{BANNED_TO}"),
+    STATUS("{STATUS}");
 
     public final String label;
 

@@ -6,6 +6,8 @@ import me.bunnykick.smc.proxysystem.system.database.MySQLConnect;
 import me.bunnykick.smc.proxysystem.utils.Methods;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MySQLBan {
 
@@ -304,6 +306,70 @@ public class MySQLBan {
             e.printStackTrace();
         }
 
+        return null;
+    }
+
+    /*String sql = "CREATE TABLE IF NOT EXISTS Banned ("
+            + "Name VARCHAR(100),"
+            + "UUID VARCHAR(100),"
+            + "IP VARCHAR(100),"
+            + "Admin VARCHAR(100),"
+            + "Reason VARCHAR(100),"
+            + "Banned TIMESTAMP DEFAULT CURRENT_TIMESTAMP,"
+            + "BannedTo TIMESTAMP DEFAULT CURRENT_TIMESTAMP,"
+            + "Permanent BOOLEAN,"
+            + "IPBanned BOOLEAN,"
+            + "Pardon BOOLEAN DEFAULT false"
+            + ");";*/
+
+    /**
+     * Gets all Information that are saved in MySQL with the Name
+     * @param name
+     * @return
+     */
+    public static String[][] getAllInformation(String name) {
+        String sql = "SELECT * FROM Banned WHERE Name = ?";
+        try {
+            PreparedStatement ps = MySQLConnect.getConnection().prepareStatement(sql);
+            ps.setString(1, name.toLowerCase());
+            ResultSet rs = ps.executeQuery();
+
+            String[][] retVal;
+
+            List<String[]> lines = new ArrayList<>();
+
+            String[] line = new String[8];
+
+            while (rs.next()) {
+
+                line[0] = rs.getString("UUID") == null ? "Nicht gefunden" : rs.getString("UUID");
+                line[1] = rs.getString("IP") == null ? "Nicht gefunden" : rs.getString("IP");
+                line[2] = rs.getString("Admin");
+                line[3] = rs.getString("Reason");
+                line[4] = Methods.translateTimestampToString(rs.getTimestamp("Banned"));
+                line[5] = rs.getBoolean("Permanent") ? "PERMANENT" : Methods.translateTimestampToString(rs.getTimestamp("BannedTo"));
+                line[6] = rs.getBoolean("IPBanned") ? "JA" : "NEIN";
+                line[7] = rs.getBoolean("Pardon") ? "ARCHIVIERT" : "GELTEND";
+                
+                lines.add(line.clone());
+
+            }
+
+            retVal = new String[lines.size()][8];
+
+            String[] curLine;
+            for(int i = 0; i < lines.size(); i++) {
+                curLine = lines.get(i);
+                retVal[i] = curLine;
+            }
+
+            if(lines.size() > 0) {
+                return retVal;
+            } else {
+                return null;
+            }
+
+        } catch(SQLException e) {}
         return null;
     }
 
