@@ -69,6 +69,13 @@ public class Tempban extends Command {
             // Getting Information
             String name = args[0];
 
+            // Check Bypass
+            List<String> bypass = banSystem.getBanConfig().getBypass();
+            if(bypass.contains(name.toLowerCase())) {
+                Methods.sendMessage(player, "§4Du kannst diesen Spieler nicht bannen!");
+                return;
+            }
+
             // Try getting UUID and IP
             String uuid = null;
             String ip = null;

@@ -108,6 +108,15 @@ public class BanConfigManager {
                         "&7Bis: &c" + BanPlaceholders.DURATION.label
                 ));
 
+                // ByPass
+                config.set("Bypass.Normalban", Methods.getList(
+                        "increase_gaming",
+                        "bunnykick",
+                        "crazy_old_men",
+                        "Halt jeder, der nicht durch normale Bans gebannt werden darf. IP-Bans sind dennoch moeglich.",
+                        "WICHTIG: alles klein schreiben in den Namen!! (so wie oben)"
+                ));
+
                 save();
             } else {
                 config = ConfigurationProvider.getProvider(YamlConfiguration.class).load(file);
@@ -153,6 +162,21 @@ public class BanConfigManager {
         List<String> retList = new ArrayList<>();
 
         String path = "Messages." + messageEnum.label;
+        if(config.contains(path)) {
+            retList = config.getStringList(path);
+        }
+
+        return retList;
+    }
+
+    /**
+     * gets a list of low-case Player names which cant be Banned with /ban or /tempban
+     * @return
+     */
+    public List<String> getBypass() {
+        String path = "Bypass.Normalban";
+        List<String> retList = null;
+
         if(config.contains(path)) {
             retList = config.getStringList(path);
         }

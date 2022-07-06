@@ -166,8 +166,8 @@ public class MySQLBan {
             ResultSet rs = ps.executeQuery();
             while(rs.next()) {
                 if(!rs.getBoolean("Pardon")) {
-                    if(!rs.getBoolean("IPBanned") && !rs.getString("Name").equalsIgnoreCase(name)) {
-                        return null;
+                    if(!rs.getBoolean("IPBanned") && !(rs.getString("UUID").equalsIgnoreCase(uuid) || rs.getString("Name").equalsIgnoreCase(name))) {
+                        continue;
                     }
                     String[] retVal = new String[CheckBanIndex.values().length];
                     retVal[CheckBanIndex.ADMIN.i] = rs.getString("Admin");
