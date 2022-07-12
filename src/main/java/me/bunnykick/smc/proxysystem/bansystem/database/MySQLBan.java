@@ -116,7 +116,7 @@ public class MySQLBan {
     }
 
     /**
-     * Archives the not longer handling Ban
+     * Archives the no longer handling Ban
      * @param uuid
      * @param name
      * @param ip
@@ -320,7 +320,7 @@ public class MySQLBan {
             + "Permanent BOOLEAN,"
             + "IPBanned BOOLEAN,"
             + "Pardon BOOLEAN DEFAULT false"
-            + ");";*/
+            */
 
     /**
      * Gets all Information that are saved in MySQL with the Name
@@ -371,6 +371,72 @@ public class MySQLBan {
 
         } catch(SQLException e) {}
         return null;
+    }
+
+    /**
+     * gets all Information which are archived:
+     * Name (String)
+     * UUID (String)
+     * IP (String)
+     * Admin (String)
+     * Reason (String)
+     * Banned (Timestamp)
+     * BannedTo (Timestamp)
+     * Permanent (boolean)
+     * IPBanned (boolean)
+     * @return
+     */
+    public static String[][] getArchiveInformation() {
+        String sql = "SELECT * FROM Banned WHERE Pardon = 1;";
+        try {
+
+            PreparedStatement ps = MySQLConnect.getConnection().prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            String[][] retVal;
+            List<String[]> rows = new ArrayList<>();
+
+            while(rs.next()) {
+                String[] row = new String[9];
+                row[0] = rs.getString("Name");
+                row[1] = rs.getString("UUID") == null ? "Nicht gefunden" : rs.getString("UUID");
+                row[2] = rs.getString("IP") == null ? "Nicht gefunden" : rs.getString("IP");
+                row[3] = rs.getString("Admin");
+                row[4] = rs.getString("Reason");
+                row[5] = Methods.translateTimestampToString(rs.getTimestamp("Banned"));
+                row[6] = Methods.translateTimestampToString(rs.getTimestamp("BannedTo"));
+                row[7] = rs.getBoolean("Permanent") ? "1" : "0";
+                row[8] = rs.getBoolean("IPBanned") ? "1" : "0";
+
+                rows.add(row);
+            }
+
+            if(rows.size() == 0)
+                return null;
+
+            retVal = new String[rows.size()][9];
+
+            for(int i = 0; i < rows.size(); i++) {
+                retVal[i] = rows.get(i);
+            }
+
+            return retVal;
+
+        } catch(SQLException e) {}
+        return null;
+    }
+
+    /**
+     * Delete all archived Bans
+     */
+    public static void deleteArchiveInformation() {
+        String sql = "DELETE FROM Banned WHERE Pardon = 1;";
+        try {
+            PreparedStatement ps = MySQLConnect.getConnection().prepareStatement(sql);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 }

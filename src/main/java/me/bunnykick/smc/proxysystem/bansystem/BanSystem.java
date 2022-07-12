@@ -3,6 +3,7 @@ package me.bunnykick.smc.proxysystem.bansystem;
 import me.bunnykick.smc.proxysystem.ProxySystem;
 import me.bunnykick.smc.proxysystem.bansystem.commands.*;
 import me.bunnykick.smc.proxysystem.bansystem.configurations.BanConfigManager;
+import me.bunnykick.smc.proxysystem.bansystem.configurations.BanLog;
 import me.bunnykick.smc.proxysystem.bansystem.database.MySQLBan;
 import me.bunnykick.smc.proxysystem.bansystem.listeners.Join;
 
@@ -15,8 +16,9 @@ public class BanSystem {
      * BanSystem Variables
      */
 
-    // Config
+    // Config/Log
     private BanConfigManager banConfig;
+    private BanLog banLog;
 
     // Commands
     private Ban banCommand;
@@ -26,6 +28,7 @@ public class BanSystem {
     private TempbanIP tempbanIPCommand;
     private BanInfo banInfoCommand;
     private BanStat banStatCommand;
+    private ArchiveBans archiveBansCommand;
 
     // Listeners
     private Join joinListener;
@@ -57,8 +60,9 @@ public class BanSystem {
          * Enabling BanSystem...
          */
 
-        // load config
+        // load config/Log
         banConfig = new BanConfigManager(this);
+        banLog = new BanLog(this);
 
         // load database
         MySQLBan.createNewTableIfNotExists();
@@ -107,6 +111,7 @@ public class BanSystem {
         tempbanIPCommand = new TempbanIP("tempbanip", this);
         banInfoCommand = new BanInfo("baninfo", this);
         banStatCommand = new BanStat("banstat", this);
+        archiveBansCommand = new ArchiveBans("archivebans", this);
 
     }
 
@@ -134,5 +139,9 @@ public class BanSystem {
 
     public BanConfigManager getBanConfig() {
         return banConfig;
+    }
+
+    public BanLog getBanLogfileManager() {
+        return banLog;
     }
 }

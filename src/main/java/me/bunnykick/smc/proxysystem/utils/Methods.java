@@ -33,7 +33,7 @@ public class Methods {
      * @return
      */
     public static String translateTimestampToString(Timestamp stamp) {
-        SimpleDateFormat format = new SimpleDateFormat("[dd.MM.yyyy;HH:mm:ss]");
+        SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 
         return format.format(stamp);
     }

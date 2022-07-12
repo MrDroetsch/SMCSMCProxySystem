@@ -11,11 +11,12 @@ public enum SystemPermissions {
     BAN_IP("BanIP"),
     TEMP_BAN_IP("TempbanIP"),
     BAN_INFO("BanInfo"),
-    BAN_STAT("BanStatistic");
+    BAN_STAT("BanStatistic"),
+    BAN_ARCHIVE("ArchiveBans");
 
     public final String label;
 
-    private SystemPermissions(String label) {
+    SystemPermissions(String label) {
         this.label = label;
     }
 

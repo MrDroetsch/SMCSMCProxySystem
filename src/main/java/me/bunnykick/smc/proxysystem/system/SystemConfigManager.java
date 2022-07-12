@@ -62,6 +62,10 @@ public class SystemConfigManager {
                 config.set("MySQL.Username", "Username");
                 config.set("MySQL.Password", "Password");
 
+                // Patterns
+                config.set("Pattern.FilePattern", "//");
+                config.set("Pattern.CSVPattern", ";");
+
                 // Systems Enabled
                 config.set("BanSystem.Enabled", true);
                 config.set("GeneralFunctions.Enabled", true);
@@ -155,6 +159,36 @@ public class SystemConfigManager {
         }
 
         return retString;
+    }
+
+    /**
+     * Gets the String part which defines a new directory on the System
+     * default: "//"
+     * @return
+     */
+    public String getFilePattern() {
+        String path = "Pattern.FilePattern";
+
+        if(config.contains(path)) {
+            return config.getString(path);
+        }
+
+        return "//";
+    }
+
+    /**
+     * Gets the String part which defines a new slot in CSV-files
+     * default: ";"
+     * @return
+     */
+    public String getCSVPattern() {
+        String path = "Pattern.CSVPattern";
+
+        if(config.contains(path)) {
+            return config.getString(path);
+        }
+
+        return ";";
     }
 
 }
