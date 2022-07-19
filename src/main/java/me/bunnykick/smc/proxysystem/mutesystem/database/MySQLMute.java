@@ -127,4 +127,24 @@ public class MySQLMute {
         return null;
     }
 
+    /**
+     * Gets the Date when he's inmuted if he's muted
+     * @param name
+     * @return
+     */
+    public static Timestamp isMuted(String name) {
+        String sql = "SELECT MutedTo FROM Muted WHERE Name = ?;";
+        try {
+            PreparedStatement ps = MySQLConnect.getConnection().prepareStatement(sql);
+            ps.setString(1, name);
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()) {
+                return rs.getTimestamp("MutedTo");
+            }
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }

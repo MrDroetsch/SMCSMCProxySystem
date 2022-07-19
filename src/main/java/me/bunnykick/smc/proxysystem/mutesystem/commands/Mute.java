@@ -78,6 +78,12 @@ public class Mute extends Command {
                 return;
             }
 
+            // Check Muted
+            if(MySQLMute.isMuted(name) != null) {
+                Methods.sendMessage(player, "§4Dieser Spieler ist bereits gemutet!");
+                return;
+            }
+
             // try getting UUID
             String uuid = null;
             ProxiedPlayer target = null;

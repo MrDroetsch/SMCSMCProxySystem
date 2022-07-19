@@ -59,8 +59,16 @@ public class UnMute extends Command {
                 return;
             }
 
-            // delete MySQL
+            // get Name
             String name = args[0];
+
+            // check Muted
+            if(MySQLMute.isMuted(name) == null) {
+                Methods.sendMessage(player, "§4Dieser Spieler ist nicht gemutet!");
+                return;
+            }
+
+            // delete MySQL
             MySQLMute.unMutePlayer(name);
 
             // send Messages
