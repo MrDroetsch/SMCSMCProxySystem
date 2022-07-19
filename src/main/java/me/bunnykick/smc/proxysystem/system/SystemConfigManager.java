@@ -1,9 +1,9 @@
 package me.bunnykick.smc.proxysystem.system;
 
 import me.bunnykick.smc.proxysystem.ProxySystem;
-import me.bunnykick.smc.proxysystem.utils.Methods;
-import me.bunnykick.smc.proxysystem.utils.SystemMessages;
-import me.bunnykick.smc.proxysystem.utils.SystemPermissions;
+import me.bunnykick.smc.proxysystem.utils.childs.ConfigManagerChild;
+import me.bunnykick.smc.proxysystem.utils.enums.SystemMessages;
+import me.bunnykick.smc.proxysystem.utils.enums.SystemPermissions;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
@@ -11,10 +11,8 @@ import net.md_5.bungee.config.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
-public class SystemConfigManager {
+public class SystemConfigManager implements ConfigManagerChild {
 
     /**
      * Configuration Variables
@@ -45,6 +43,7 @@ public class SystemConfigManager {
     /**
      * Load ConfigFile
      */
+    @Override
     public void load() {
         try {
             if(!file.exists()) {
@@ -66,12 +65,6 @@ public class SystemConfigManager {
                 config.set("Pattern.FilePattern", "//");
                 config.set("Pattern.CSVPattern", ";");
 
-                // Systems Enabled
-                config.set("BanSystem.Enabled", true);
-                config.set("GeneralFunctions.Enabled", true);
-                config.set("MuteSystem.Enabled", true);
-                config.set("ReportSystem.Enabled", true);
-
                 // Permissions
                 config.set("Permissions.AdminPermission", "proxysystem.admin");
                 config.set("Permissions.ReloadCommand", "proxysystem.reload");
@@ -91,6 +84,7 @@ public class SystemConfigManager {
     /**
      * Save ConfigFile
      */
+    @Override
     public void save() {
         try {
             ConfigurationProvider.getProvider(YamlConfiguration.class).save(config, file);
@@ -111,22 +105,6 @@ public class SystemConfigManager {
             information = config.getString(path);
         }
         return information;
-    }
-
-    /**
-     * Checks if the Part of the System is Enabled
-     * @param systemString String to identify the System
-     * @return Boolean if the System is Enabled
-     */
-    public boolean isEnabled(String systemString) {
-
-        String path = systemString + ".Enabled";
-
-        if(!config.contains(path))
-            return false;
-
-        return config.getBoolean(path);
-
     }
 
     /**

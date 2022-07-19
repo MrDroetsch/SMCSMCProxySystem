@@ -3,12 +3,11 @@ package me.bunnykick.smc.proxysystem.bansystem.listeners;
 import me.bunnykick.smc.proxysystem.bansystem.BanSystem;
 import me.bunnykick.smc.proxysystem.bansystem.database.MySQLBan;
 import me.bunnykick.smc.proxysystem.bansystem.utils.BanMessages;
-import me.bunnykick.smc.proxysystem.bansystem.utils.BanPlaceholders;
 import me.bunnykick.smc.proxysystem.bansystem.utils.CheckBanIndex;
 import me.bunnykick.smc.proxysystem.utils.Methods;
+import me.bunnykick.smc.proxysystem.utils.enums.Placeholders;
 import net.md_5.bungee.api.connection.PendingConnection;
 import net.md_5.bungee.api.event.LoginEvent;
-import net.md_5.bungee.api.event.PreLoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
@@ -27,7 +26,7 @@ public class Join implements Listener {
      */
     public Join(BanSystem banSystem) {
         this.banSystem = banSystem;
-        banSystem.getPlugin().getProxy().getPluginManager().registerListener(banSystem.getPlugin(), this);
+        banSystem.plugin.getProxy().getPluginManager().registerListener(banSystem.plugin, this);
     }
 
     /**
@@ -57,11 +56,11 @@ public class Join implements Listener {
             }
             kickMessage = kickMessage.substring(0, kickMessage.length()-1);
 
-            kickMessage = Methods.translatePlaceholder(BanPlaceholders.PLAYER, kickMessage, name);
-            kickMessage = Methods.translatePlaceholder(BanPlaceholders.ADMIN, kickMessage, admin);
-            kickMessage = Methods.translatePlaceholder(BanPlaceholders.DURATION, kickMessage, duration);
-            kickMessage = Methods.translatePlaceholder(BanPlaceholders.REASON, kickMessage, reason);
-            kickMessage = Methods.translatePlaceholder(BanPlaceholders.IP_BANNED, kickMessage, ipBanned);
+            kickMessage = Methods.translatePlaceholder(Placeholders.PLAYER, kickMessage, name);
+            kickMessage = Methods.translatePlaceholder(Placeholders.ADMIN, kickMessage, admin);
+            kickMessage = Methods.translatePlaceholder(Placeholders.DURATION, kickMessage, duration);
+            kickMessage = Methods.translatePlaceholder(Placeholders.REASON, kickMessage, reason);
+            kickMessage = Methods.translatePlaceholder(Placeholders.IP_BANNED, kickMessage, ipBanned);
 
             // kick player
             pc.disconnect(Methods.translateChatColors(kickMessage));

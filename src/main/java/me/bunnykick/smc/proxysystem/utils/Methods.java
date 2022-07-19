@@ -1,7 +1,7 @@
 package me.bunnykick.smc.proxysystem.utils;
 
 import me.bunnykick.smc.proxysystem.bansystem.utils.BanInfoIndex;
-import me.bunnykick.smc.proxysystem.bansystem.utils.BanPlaceholders;
+import me.bunnykick.smc.proxysystem.utils.enums.Placeholders;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
@@ -88,7 +88,7 @@ public class Methods {
      * @param value
      * @return Given String with Value
      */
-    public static String translatePlaceholder(BanPlaceholders placeholder, String string, String value) {
+    public static String translatePlaceholder(Placeholders placeholder, String string, String value) {
         String label = placeholder.label;
 
         if(string.contains(label)) {
@@ -106,7 +106,7 @@ public class Methods {
      */
     public static String translatePlaceholders(String string, String[] values) {
         String label;
-        for(BanPlaceholders holder : BanPlaceholders.values()) {
+        for(Placeholders holder : Placeholders.values()) {
             label = holder.label;
             switch(holder) {
                 case PLAYER:
@@ -139,7 +139,11 @@ public class Methods {
         return string;
     }
 
-
+    /**
+     * Gets the Milliseconds added through the string
+     * @param argument
+     * @return
+     */
     public static long getAddedMillis(String argument) {
         try {
             char[] charArray = argument.toCharArray();

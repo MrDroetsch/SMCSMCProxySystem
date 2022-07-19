@@ -3,11 +3,11 @@ package me.bunnykick.smc.proxysystem.bansystem.commands;
 import me.bunnykick.smc.proxysystem.bansystem.BanSystem;
 import me.bunnykick.smc.proxysystem.bansystem.database.MySQLBan;
 import me.bunnykick.smc.proxysystem.bansystem.utils.BanMessages;
-import me.bunnykick.smc.proxysystem.bansystem.utils.BanPlaceholders;
 import me.bunnykick.smc.proxysystem.bansystem.utils.CheckBanIndex;
 import me.bunnykick.smc.proxysystem.system.database.MySQLUUID;
 import me.bunnykick.smc.proxysystem.utils.Methods;
-import me.bunnykick.smc.proxysystem.utils.SystemPermissions;
+import me.bunnykick.smc.proxysystem.utils.enums.Placeholders;
+import me.bunnykick.smc.proxysystem.utils.enums.SystemPermissions;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -27,7 +27,6 @@ public class Unban extends Command {
     public Unban(String commandName, BanSystem banSystem) {
         super(commandName);
         this.banSystem = banSystem;
-        banSystem.getPlugin().getProxy().getPluginManager().registerCommand(banSystem.getPlugin(), this);
     }
 
     /**
@@ -45,7 +44,7 @@ public class Unban extends Command {
 
             // Checking Permission
             String permission = banSystem.getBanConfig().getPermission(SystemPermissions.UNBAN);
-            String adminPermission = banSystem.getPlugin().getSystemConfig().getPermission(SystemPermissions.ADMIN);
+            String adminPermission = banSystem.plugin.getSystemConfig().getPermission(SystemPermissions.ADMIN);
             if(!(player.hasPermission(permission) || player.hasPermission(adminPermission))) {
                 Methods.sendMessage(player, "&4Keine Berechtigung");
                 return;
@@ -83,15 +82,15 @@ public class Unban extends Command {
                 }
                 unbanMessage = unbanMessage.substring(0, unbanMessage.length()-1);
 
-                unbanMessage = Methods.translatePlaceholder(BanPlaceholders.ADMIN, unbanMessage, checkBanned[CheckBanIndex.ADMIN.i]);
-                unbanMessage = Methods.translatePlaceholder(BanPlaceholders.PLAYER, unbanMessage, banned);
-                unbanMessage = Methods.translatePlaceholder(BanPlaceholders.IP_BANNED, unbanMessage, checkBanned[CheckBanIndex.IP_BANNED.i]);
-                unbanMessage = Methods.translatePlaceholder(BanPlaceholders.REASON, unbanMessage, checkBanned[CheckBanIndex.REASON.i]);
-                unbanMessage = Methods.translatePlaceholder(BanPlaceholders.DURATION, unbanMessage, checkBanned[CheckBanIndex.DURATION.i]);
+                unbanMessage = Methods.translatePlaceholder(Placeholders.ADMIN, unbanMessage, checkBanned[CheckBanIndex.ADMIN.i]);
+                unbanMessage = Methods.translatePlaceholder(Placeholders.PLAYER, unbanMessage, banned);
+                unbanMessage = Methods.translatePlaceholder(Placeholders.IP_BANNED, unbanMessage, checkBanned[CheckBanIndex.IP_BANNED.i]);
+                unbanMessage = Methods.translatePlaceholder(Placeholders.REASON, unbanMessage, checkBanned[CheckBanIndex.REASON.i]);
+                unbanMessage = Methods.translatePlaceholder(Placeholders.DURATION, unbanMessage, checkBanned[CheckBanIndex.DURATION.i]);
 
                 // Send UnbanMessage
                 String perm = banSystem.getBanConfig().getPermission(SystemPermissions.BAN_NOTIFY);
-                for(ProxiedPlayer onlinePlayers : banSystem.getPlugin().getProxy().getPlayers()) {
+                for(ProxiedPlayer onlinePlayers : banSystem.plugin.getProxy().getPlayers()) {
                     if(onlinePlayers.hasPermission(perm) || onlinePlayers.hasPermission(adminPermission))
                         Methods.sendMessage(onlinePlayers, unbanMessage);
                 }

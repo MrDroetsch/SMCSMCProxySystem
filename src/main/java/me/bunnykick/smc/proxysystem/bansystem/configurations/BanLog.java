@@ -43,13 +43,13 @@ public class BanLog {
     public void saveFile(String[][] data) throws IOException {
         Date date = Calendar.getInstance().getTime();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String filePattern = banSystem.getPlugin().getSystemConfig().getFilePattern();
-        File file = new File(banSystem.getPlugin().getDataFolder(), filePattern + "BanSystem" + filePattern + "Logs");
+        String filePattern = banSystem.plugin.getSystemConfig().getFilePattern();
+        File file = new File(banSystem.plugin.getDataFolder(), filePattern + "BanSystem" + filePattern + "Logs");
         if(!file.exists())
             file.mkdirs();
-        file = new File(banSystem.getPlugin().getDataFolder(), filePattern + "BanSystem" + filePattern + "Logs" + filePattern + sdf.format(date) + ".csv");
+        file = new File(banSystem.plugin.getDataFolder(), filePattern + "BanSystem" + filePattern + "Logs" + filePattern + sdf.format(date) + ".csv");
         for(int i = 1; file.exists(); i++) {
-            file = new File(banSystem.getPlugin().getDataFolder(), filePattern + "BanSystem" + filePattern + "Logs" + filePattern + sdf.format(date) + "(" + i + ").csv");
+            file = new File(banSystem.plugin.getDataFolder(), filePattern + "BanSystem" + filePattern + "Logs" + filePattern + sdf.format(date) + "(" + i + ").csv");
         }
 
         file.createNewFile();
@@ -62,7 +62,7 @@ public class BanLog {
     private void writeLines(File file, String[] header, String[][] data) throws IOException {
         List<String> lines = new ArrayList<>();
         String line = "";
-        String CSVPattern = banSystem.getPlugin().getSystemConfig().getCSVPattern();
+        String CSVPattern = banSystem.plugin.getSystemConfig().getCSVPattern();
         for(int i = 0; i < header.length; i++) {
             line += header[i] + CSVPattern;
         }

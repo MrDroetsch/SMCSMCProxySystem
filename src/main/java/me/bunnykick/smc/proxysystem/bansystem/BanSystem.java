@@ -1,20 +1,21 @@
 package me.bunnykick.smc.proxysystem.bansystem;
 
-import me.bunnykick.smc.proxysystem.ProxySystem;
 import me.bunnykick.smc.proxysystem.bansystem.commands.*;
 import me.bunnykick.smc.proxysystem.bansystem.configurations.BanConfigManager;
 import me.bunnykick.smc.proxysystem.bansystem.configurations.BanLog;
 import me.bunnykick.smc.proxysystem.bansystem.database.MySQLBan;
 import me.bunnykick.smc.proxysystem.bansystem.listeners.Join;
+import me.bunnykick.smc.proxysystem.utils.childs.SystemChild;
+import net.md_5.bungee.api.plugin.PluginManager;
 
-public class BanSystem {
-
-    // System-Plugin variable
-    private final ProxySystem plugin;
+public class BanSystem implements SystemChild {
 
     /**
      * BanSystem Variables
      */
+
+    // Enabled?
+    private boolean enabled;
 
     // Config/Log
     private BanConfigManager banConfig;
@@ -34,109 +35,112 @@ public class BanSystem {
     private Join joinListener;
 
     /**
-     * Constructor
-     * @param plugin System-Plugin
-     */
-    public BanSystem(ProxySystem plugin) {
-        this.plugin = plugin;
-    }
-
-    /**
      * Enable BanSystem if it's enabled in SystemConfig
      */
+    @Override
     public void enable() {
-
-        /*
-         * return if it's not enabled
-         */
-        if(!plugin.getSystemConfig().isEnabled(BanSystem.class.getSimpleName())) {
-            System.err.println("[ProxySystem] ----------404----------");
-            System.err.println("[ProxySystem] Das BanSystem wird NICHT geladen. Falls das ein Fehler ist, stelle dies in der SystemConfig.yml um und nutze /proxysystem reload.");
-            System.err.println("[ProxySystem] ----------404----------");
-            return;
-        }
-
-        /*
-         * Enabling BanSystem...
-         */
-
-        // load config/Log
-        banConfig = new BanConfigManager(this);
-        banLog = new BanLog(this);
-
-        // load database
-        MySQLBan.createNewTableIfNotExists();
-
-        // register commands
-        registerCommands();
-
-        // register listeners
-        registerListeners();
-
+        SystemChild.super.enable();
+        setEnabled(true);
     }
 
     /**
      * Disable BanSystem
      */
+    @Override
     public void disable() {
+        SystemChild.super.disable();
+        setEnabled(false);
+    }
 
-        // reload Config
-        banConfig.load();
+    @Override
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
 
-        // unregister commands
-        unregisterCommands();
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
 
-        // unregister listeners
-        unregisterListeners();
+    @Override
+    public void loadConfig() {
+        banConfig = new BanConfigManager(this);
+        banLog = new BanLog(this);
+    }
 
+    @Override
+    public void reloadConfig() {
+        banConfig.reload();
     }
 
     /**
-     * reload BanSystem
+     * Un-/Register Modules
      */
-    public void reload() {
-        disable();
-        enable();
+
+    @Override
+    public void MySQLConnect() {
+        MySQLBan.createNewTableIfNotExists();
     }
 
-    /**
-     * Un-/Register Commands and Listeners
-     */
-    private void registerCommands() {
+    public void loadCommands() {
+
+        PluginManager pluginManager = plugin.getProxy().getPluginManager();
 
         banCommand = new Ban("ban", this);
+        pluginManager.registerCommand(plugin, banCommand);
+
         tempbanCommand = new Tempban("tempban", this);
+        pluginManager.registerCommand(plugin, tempbanCommand);
+
         unbanCommand = new Unban("unban", this);
+        pluginManager.registerCommand(plugin, unbanCommand);
+
         banIPCommand = new BanIP("banip", this);
+        pluginManager.registerCommand(plugin, banIPCommand);
+
         tempbanIPCommand = new TempbanIP("tempbanip", this);
+        pluginManager.registerCommand(plugin, tempbanIPCommand);
+
         banInfoCommand = new BanInfo("baninfo", this);
+        pluginManager.registerCommand(plugin, banInfoCommand);
+
         banStatCommand = new BanStat("banstat", this);
+        pluginManager.registerCommand(plugin, banStatCommand);
+
         archiveBansCommand = new ArchiveBans("archivebans", this);
+        pluginManager.registerCommand(plugin, archiveBansCommand);
 
     }
 
-    private void unregisterCommands() {
-        // Ban-Command
-        getPlugin().getProxy().getPluginManager().unregisterCommand(banCommand);
+    public void unloadCommands() {
+
+        PluginManager pluginManager = plugin.getProxy().getPluginManager();
+
+        pluginManager.unregisterCommand(banCommand);
+        pluginManager.unregisterCommand(tempbanCommand);
+        pluginManager.unregisterCommand(unbanCommand);
+        pluginManager.unregisterCommand(banIPCommand);
+        pluginManager.unregisterCommand(tempbanIPCommand);
+        pluginManager.unregisterCommand(banInfoCommand);
+        pluginManager.unregisterCommand(banStatCommand);
+        pluginManager.unregisterCommand(archiveBansCommand);
+
     }
 
-    private void registerListeners() {
+    public void registerListeners() {
         // Join Listener
         joinListener = new Join(this);
+        plugin.getProxy().getPluginManager().registerListener(plugin, joinListener);
     }
 
-    private void unregisterListeners() {
+    public void unregisterListeners() {
         // Join Listener
-        getPlugin().getProxy().getPluginManager().unregisterListener(joinListener);
+        plugin.getProxy().getPluginManager().unregisterListener(joinListener);
     }
 
     /**
      * Getter
      */
-    public ProxySystem getPlugin() {
-        return plugin;
-    }
-
     public BanConfigManager getBanConfig() {
         return banConfig;
     }
@@ -144,4 +148,5 @@ public class BanSystem {
     public BanLog getBanLogfileManager() {
         return banLog;
     }
+
 }

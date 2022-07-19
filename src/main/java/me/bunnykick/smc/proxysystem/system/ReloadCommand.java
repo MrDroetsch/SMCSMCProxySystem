@@ -2,14 +2,12 @@ package me.bunnykick.smc.proxysystem.system;
 
 import me.bunnykick.smc.proxysystem.ProxySystem;
 import me.bunnykick.smc.proxysystem.utils.Methods;
-import me.bunnykick.smc.proxysystem.utils.SystemMessages;
-import me.bunnykick.smc.proxysystem.utils.SystemPermissions;
+import me.bunnykick.smc.proxysystem.utils.enums.SystemMessages;
+import me.bunnykick.smc.proxysystem.utils.enums.SystemPermissions;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
-
-import java.util.List;
 
 public class ReloadCommand extends Command {
 

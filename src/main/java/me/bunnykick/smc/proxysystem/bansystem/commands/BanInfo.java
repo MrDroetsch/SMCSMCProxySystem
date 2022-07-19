@@ -4,8 +4,8 @@ import me.bunnykick.smc.proxysystem.bansystem.BanSystem;
 import me.bunnykick.smc.proxysystem.bansystem.database.MySQLBan;
 import me.bunnykick.smc.proxysystem.bansystem.utils.BanMessages;
 import me.bunnykick.smc.proxysystem.utils.Methods;
-import me.bunnykick.smc.proxysystem.utils.SystemMessages;
-import me.bunnykick.smc.proxysystem.utils.SystemPermissions;
+import me.bunnykick.smc.proxysystem.utils.enums.SystemMessages;
+import me.bunnykick.smc.proxysystem.utils.enums.SystemPermissions;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
@@ -24,7 +24,6 @@ public class BanInfo extends Command {
     public BanInfo(String commandName, BanSystem banSystem) {
         super(commandName);
         this.banSystem = banSystem;
-        banSystem.getPlugin().getProxy().getPluginManager().registerCommand(banSystem.getPlugin(), this);
     }
 
     /**
@@ -42,9 +41,9 @@ public class BanInfo extends Command {
 
             // check Permission
             String permission = banSystem.getBanConfig().getPermission(SystemPermissions.BAN_INFO);
-            String adminPermission = banSystem.getPlugin().getSystemConfig().getPermission(SystemPermissions.ADMIN);
+            String adminPermission = banSystem.plugin.getSystemConfig().getPermission(SystemPermissions.ADMIN);
             if(!(player.hasPermission(permission) || player.hasPermission(adminPermission))) {
-                Methods.sendMessage(player, banSystem.getPlugin().getSystemConfig().getMessage(SystemMessages.NOPERM));
+                Methods.sendMessage(player, banSystem.plugin.getSystemConfig().getMessage(SystemMessages.NOPERM));
                 return;
             }
 

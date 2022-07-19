@@ -1,6 +1,7 @@
 package me.bunnykick.smc.proxysystem;
 
 import me.bunnykick.smc.proxysystem.bansystem.BanSystem;
+import me.bunnykick.smc.proxysystem.mutesystem.MuteSystem;
 import me.bunnykick.smc.proxysystem.system.database.MySQLConnect;
 import me.bunnykick.smc.proxysystem.system.database.MySQLUUID;
 import me.bunnykick.smc.proxysystem.system.ReloadCommand;
@@ -14,6 +15,7 @@ public final class ProxySystem extends Plugin {
      * Variables
      */
 
+    // disabled boolean
     private boolean disabled = false;
 
     // Instance
@@ -21,6 +23,7 @@ public final class ProxySystem extends Plugin {
 
     // System-Variables
     private BanSystem banSystem;
+    private MuteSystem muteSystem;
 
     // Commands
     private ReloadCommand reloadCommand;
@@ -61,8 +64,12 @@ public final class ProxySystem extends Plugin {
         registerListeners();
 
         // Enable Ban-System
-        banSystem = new BanSystem(this); // declaring...
+        banSystem = new BanSystem(); // declaring...
         banSystem.enable(); // enabling...
+
+        // Enable Mute-System
+        muteSystem = new MuteSystem();
+        muteSystem.enable();
 
         // TODO: load other systems
 
@@ -75,8 +82,9 @@ public final class ProxySystem extends Plugin {
         // Plugin shutdown logic
         MySQLConnect.disconnect();
         // TODO: shutdown systems
-        // BanSystem
+        // Systems Shutdown
         banSystem.disable();
+        muteSystem.disable();
     }
 
     /**

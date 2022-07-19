@@ -9,7 +9,7 @@ commands:
   ban:
     usage: /ban <Spieler> <Grund>
   tempban:
-    usage: /ban <Spieler> <Dauer> <Grund>
+    usage: /tempban <Spieler> <Dauer> <Grund>
   unban:
     usage: /unban <Spieler>
   banip:
@@ -22,3 +22,9 @@ commands:
     usage: /banstat <Spieler> [BanID]
   archivebans:
     usage: /archivebans
+  mute:
+    usage: /mute <Spieler> <Dauer> <Grund>
+  muteinfo:
+    usage: /muteinfo <Spieler>
+  unmute:
+    usage: /unmute <Spieler>

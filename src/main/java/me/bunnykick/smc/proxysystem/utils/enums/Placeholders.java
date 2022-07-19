@@ -1,24 +1,26 @@
-package me.bunnykick.smc.proxysystem.bansystem.utils;
+package me.bunnykick.smc.proxysystem.utils.enums;
 
-public enum BanPlaceholders {
+public enum Placeholders {
 
-    REASON("{REASON}"),
     PLAYER("{PLAYER}"),
+    ADMIN("{ADMIN}"),
+    REASON("{REASON}"),
+    MUTED_WHEN("{MUTED_WHEN}"),
+    MUTED_TO("{MUTED_TO}"),
+    PARDON("{UNMUTED}"),
+    UUID("{UUID}"),
     IP("{IP}"),
     DURATION("{DURATION}"),
-    ADMIN("{ADMIN}"),
     COUNT("{COUNT}"),
     STILL_BANNED("{STILL_BANNED}"),
     IP_BANNED("{IP_BANNED}"),
-    UUID("{UUID}"),
     BANNED_FROM("{BANNED_FROM}"),
     BANNED_TO("{BANNED_TO}"),
     STATUS("{STATUS}");
 
     public final String label;
 
-    BanPlaceholders(String label) {
+    Placeholders(String label) {
         this.label = label;
     }
-
 }

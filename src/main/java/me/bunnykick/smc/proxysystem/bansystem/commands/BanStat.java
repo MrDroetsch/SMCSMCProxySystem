@@ -3,10 +3,10 @@ package me.bunnykick.smc.proxysystem.bansystem.commands;
 import me.bunnykick.smc.proxysystem.bansystem.BanSystem;
 import me.bunnykick.smc.proxysystem.bansystem.database.MySQLBan;
 import me.bunnykick.smc.proxysystem.bansystem.utils.BanMessages;
-import me.bunnykick.smc.proxysystem.bansystem.utils.BanPlaceholders;
 import me.bunnykick.smc.proxysystem.utils.Methods;
-import me.bunnykick.smc.proxysystem.utils.SystemMessages;
-import me.bunnykick.smc.proxysystem.utils.SystemPermissions;
+import me.bunnykick.smc.proxysystem.utils.enums.Placeholders;
+import me.bunnykick.smc.proxysystem.utils.enums.SystemMessages;
+import me.bunnykick.smc.proxysystem.utils.enums.SystemPermissions;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
@@ -25,7 +25,6 @@ public class BanStat extends Command {
     public BanStat(String name, BanSystem banSystem) {
         super(name);
         this.banSystem = banSystem;
-        banSystem.getPlugin().getProxy().getPluginManager().registerCommand(banSystem.getPlugin(), this);
     }
 
     /**
@@ -43,9 +42,9 @@ public class BanStat extends Command {
 
             // check Permssion
             String permission = banSystem.getBanConfig().getPermission(SystemPermissions.BAN_STAT);
-            String adminPermission = banSystem.getPlugin().getSystemConfig().getPermission(SystemPermissions.ADMIN);
+            String adminPermission = banSystem.plugin.getSystemConfig().getPermission(SystemPermissions.ADMIN);
             if(!(player.hasPermission(permission) || player.hasPermission(adminPermission))) {
-                Methods.sendMessage(player, banSystem.getPlugin().getSystemConfig().getMessage(SystemMessages.NOPERM));
+                Methods.sendMessage(player, banSystem.plugin.getSystemConfig().getMessage(SystemMessages.NOPERM));
                 return;
             }
 
@@ -109,15 +108,15 @@ public class BanStat extends Command {
             banStatMessage = banStatMessage.substring(0, banStatMessage.length()-1);
 
             // replace placeholders
-            banStatMessage = Methods.translatePlaceholder(BanPlaceholders.PLAYER, banStatMessage, name);
-            banStatMessage = Methods.translatePlaceholder(BanPlaceholders.UUID, banStatMessage, uuid);
-            banStatMessage = Methods.translatePlaceholder(BanPlaceholders.IP, banStatMessage, ip);
-            banStatMessage = Methods.translatePlaceholder(BanPlaceholders.ADMIN, banStatMessage, admin);
-            banStatMessage = Methods.translatePlaceholder(BanPlaceholders.REASON, banStatMessage, reason);
-            banStatMessage = Methods.translatePlaceholder(BanPlaceholders.BANNED_FROM, banStatMessage, bannedFrom);
-            banStatMessage = Methods.translatePlaceholder(BanPlaceholders.BANNED_TO, banStatMessage, bannedTo);
-            banStatMessage = Methods.translatePlaceholder(BanPlaceholders.IP_BANNED, banStatMessage, IPBanned);
-            banStatMessage = Methods.translatePlaceholder(BanPlaceholders.STATUS, banStatMessage, status);
+            banStatMessage = Methods.translatePlaceholder(Placeholders.PLAYER, banStatMessage, name);
+            banStatMessage = Methods.translatePlaceholder(Placeholders.UUID, banStatMessage, uuid);
+            banStatMessage = Methods.translatePlaceholder(Placeholders.IP, banStatMessage, ip);
+            banStatMessage = Methods.translatePlaceholder(Placeholders.ADMIN, banStatMessage, admin);
+            banStatMessage = Methods.translatePlaceholder(Placeholders.REASON, banStatMessage, reason);
+            banStatMessage = Methods.translatePlaceholder(Placeholders.BANNED_FROM, banStatMessage, bannedFrom);
+            banStatMessage = Methods.translatePlaceholder(Placeholders.BANNED_TO, banStatMessage, bannedTo);
+            banStatMessage = Methods.translatePlaceholder(Placeholders.IP_BANNED, banStatMessage, IPBanned);
+            banStatMessage = Methods.translatePlaceholder(Placeholders.STATUS, banStatMessage, status);
 
             // send Message
             Methods.sendMessage(player, banStatMessage);

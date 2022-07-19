@@ -1,4 +1,4 @@
-package me.bunnykick.smc.proxysystem.utils;
+package me.bunnykick.smc.proxysystem.utils.enums;
 
 public enum SystemMessages {
     NOPERM("NoPerm");

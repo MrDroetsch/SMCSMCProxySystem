@@ -1,4 +1,4 @@
-package me.bunnykick.smc.proxysystem.utils;
+package me.bunnykick.smc.proxysystem.utils.enums;
 
 public enum SystemPermissions {
 
@@ -12,7 +12,12 @@ public enum SystemPermissions {
     TEMP_BAN_IP("TempbanIP"),
     BAN_INFO("BanInfo"),
     BAN_STAT("BanStatistic"),
-    BAN_ARCHIVE("ArchiveBans");
+    BAN_ARCHIVE("ArchiveBans"),
+    MUTE("Mute"),
+    MUTE_BYPASS("MuteBypass"),
+    MUTE_INFO("MuteInfo"),
+    UNMUTE("Unmute"),
+    MUTE_NOTIFY("muteNotify");
 
     public final String label;
 
